@@ -3,7 +3,7 @@ Spring 2019
 Amirsadra Mohseni, SID 862085035
 Jihad Shalabi, SID 861294360
 
-#Introduction
+# Introduction
 This program intends to perform the following functions:
 
 1. Print a command prompt (e.g. `$`)
