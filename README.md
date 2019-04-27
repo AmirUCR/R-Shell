@@ -22,8 +22,7 @@ Where you can pass in any number of commands separated by any of ||, &&, or ; wh
 
 The executable can be any program that is located at one of the PATH environment variable locations. Moreover, the [argumentList] is simply a list of zero or more arguments separated by spaces.
 
-The design patter we use for this program is the **Composite Pattern**. 
-**TODO: Write brief overview of how inputs are transformed into classes**
+The design patter we use for this program is the **Composite Pattern**. The user input is taken by the Parser and each word is tokenized and stored in a vector. We may use stacks and queues to build an expression tree of executable and connector objects, however, this decision is not concrete as of this time. From there, each connector will query the evaluate function of its lhs and rhs to see if they succeeded or failed. Depending on these evaluates, the connector will make its own evaluate function which returns an appropriate true or false depending on the connector type. Each Executable object uses execvp, syscall forks, and waitpid to carry out its job.
 
 # Diagram
 ![UML Diagram for RShell](https://github.com/cs100/spring-2019-assignment-cs100-dance-team/blob/master/images/UMLDiagram.png)
@@ -140,7 +139,7 @@ The first block of the if statement is executed only in parent process, while is
 - Since exec replaces the calling program with another, it never returns unless there is an error. 
 
 EX:
-Listing 3.4 (fork-exec.c) Using fork and exec Together
+Using fork and exec Together
 ```
 #include <stdio.h>
 #include <stdlib.h>
