@@ -20,4 +20,8 @@ Where you can pass in any number of commands separated by any of ||, &&, or ; wh
 
 The executable can be any program that is located at one of the PATH environment variable locations. Moreover, the [argumentList] is simply a list of zero or more arguments separated by spaces.
 
+The design patter we use for this program is the **Composite Pattern**. 
+**TODO: Write brief overview of how inputs are transformed into classes**
 
+# Diagram
+![UML Diagram for RShell](https://github.com/cs100/spring-2019-assignment-cs100-dance-team/images/UMLDiagram.png)
