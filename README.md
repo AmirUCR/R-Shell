@@ -88,3 +88,95 @@ The design patter we use for this program is the **Composite Pattern**.
 
 * Parse
   * Tokenizes the userInput. Stores the tokenized words in the commands vector.
+
+# FORK, EXECVP, AND WAITPID
+
+## fork()
+```
+#include <stdio.h> 
+#include <sys/types.h> 
+#include <unistd.h>
+```
+- Makes a child process that is an exact copy of its parent process.
+- When fork is called, a duplicate process called a child process is created that
+  continues from the point that fork was called in the parent. 
+- The child is a new process, so it has its own process ID. 
+- You can use getpid to get the process ID
+- When you call fork(), the return value in the parent process is the process ID of the child. The return value in the child process is zero since it has no children(this is how you know if a process you're in is a child process).  
+- Total number of processes = 2^n where n is the # of fork system calls
+
+Ex:
+```
+#include <stdio.h>
+#include <sys/types.h>
+#include <unistd.h>
+
+int main ()
+{
+ pid_t child_pid; //pid_t is simply a variable type for process ID's
+ printf ("the main program process ID is %d\n", (int) getpid());
+ child_pid = fork () ;
+ 
+ if (child_pid != 0) {
+ printf ("this is the parent process, with id %d\n", (int) getpid ());
+ printf ("the child's process ID is %d\n",(int) child_pid );
+}
+ else {
+ printf ("this is the child process, with id %d\n", (int) getpid ());
+ return 0;
+}
+```
+
+The first block of the if statement is executed only in parent process, while is executed by the child. 
+
+## execvp()
+
+- The exec family of functions causes a process to cease being an instance of one program and to instead become an instance of another program. 
+
+- Execvp() specifically accepts a program name and searches for that name in the current execution path(does not need the full path of the program). It also accepts an argument list for the new program as a NULL-terminated array of pointers to strings. 
+
+- Since exec replaces the calling program with another, it never returns unless there is an error. 
+
+EX:
+Listing 3.4 (fork-exec.c) Using fork and exec Together
+```
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/types.h>
+#include <unistd.h>
+
+/* Spawn a child process running a new program. PROGRAM is the name
+ of the program to run; the path will be searched for this program.
+ ARG_LIST is a NULL-terminated list of character strings to be
+ passed as the program's argument list. Returns the process ID of
+ the spawned process. */
+int spawn (char* program, char** arg_list) 
+{
+ pid_t child_pid;
+ /* Duplicate this process. */
+ child_pid = fork ();
+
+ if (child_pid != 0)
+ /* This is the parent process. */
+ return child_pid;
+ else {
+ /* Now execute PROGRAM, searching for it in the path. */
+ execvp (program, arg_list);
+
+ /* The execvp function returns only if an error occurs. */
+ fprintf (stderr, "an error occurred in execvp\n");
+ 
+ abort ();
+ }
+} 
+```
+
+## waitpid()
+
+- The wait() system call suspends execution of the current process until one of its children terminates. The call wait(&status) is equivalent to:
+
+waitpid(-1, &status, 0);
+
+- The waitpid() system call suspends execution of the current process until a child specified by pid argument has changed state. By default, waitpid() waits only for terminated children
+
+- Used to wait for state changes in a child of the calling process, and obtain information about the child whose state has changed. A state change is considered to be: the child terminated; the child was stopped by a signal; or the child was resumed by a signal. In the case of a terminated child, performing a wait allows the system to release the resources associated with the child; if a wait is not performed, then terminated the child remains in a "zombie" state. 
