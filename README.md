@@ -25,7 +25,7 @@ The design patter we use for this program is the **Composite Pattern**.
 
 # Diagram
 ![UML Diagram for RShell](https://github.com/cs100/spring-2019-assignment-cs100-dance-team/blob/master/images/UMLDiagram.png)
-#Classes
+# Classes
 **Abstract Class Base**
 * Pure-Virtual function evaluate()
   * The ; connector's evaluate only returns the status of its RHS
@@ -84,7 +84,7 @@ The design patter we use for this program is the **Composite Pattern**.
 * Called in main to get the user input on the command shell.
 
 * GetInput
- * Takes the user input string and stores it in the userInput variable.
+  * Takes the user input string and stores it in the userInput variable.
 
 * Parse
- * Tokenizes the userInput. Stores the tokenized words in the commands vector.
+  * Tokenizes the userInput. Stores the tokenized words in the commands vector.
