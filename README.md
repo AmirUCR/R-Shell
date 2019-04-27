@@ -24,4 +24,4 @@ The design patter we use for this program is the **Composite Pattern**.
 **TODO: Write brief overview of how inputs are transformed into classes**
 
 # Diagram
-![UML Diagram for RShell](https://github.com/cs100/spring-2019-assignment-cs100-dance-team/images/UMLDiagram.png)
+![UML Diagram for RShell](https://github.com/cs100/spring-2019-assignment-cs100-dance-team/blob/master/images/UMLDiagram.png)
