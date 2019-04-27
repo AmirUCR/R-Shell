@@ -43,7 +43,7 @@ The design patter we use for this program is the **Composite Pattern**.
 * Takes in two Command pointer type objects (can be an Executable or another Command) and calls evaluate on them.
 
 * Overrides evaluate
-  *The evaluate function returns true if both lhsEval and rhsEval are true
+  * The evaluate function returns true if both lhsEval and rhsEval are true
 
 * Overrides execute
   * The execute function takes lhs and rhs Command pointer types and instantiatesnew Command objects.
