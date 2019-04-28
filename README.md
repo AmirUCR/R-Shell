@@ -106,7 +106,8 @@ The design patter we use for this program is the **Composite Pattern**. The user
 - When you call fork(), the return value in the parent process is the process ID of the child. The return value in the child process is zero since it has no children(this is how you know if a process you're in is a child process).  
 - Total number of processes = 2^n where n is the # of fork system calls
 
-Ex:
+Ex:(taken from Advanced Linux Programming by Mark Mitchell, Jeffrey Oldham, Alex Samuel)
+
 ```
 #include <stdio.h>
 #include <sys/types.h>
@@ -138,7 +139,7 @@ The first block of the if statement is executed only in parent process, while is
 
 - Since exec replaces the calling program with another, it never returns unless there is an error. 
 
-EX:
+EX:(taken from Advanced Linux Programming by Mark Mitchell, Jeffrey Oldham, Alex Samuel)
 Using fork and exec Together
 ```
 #include <stdio.h>
