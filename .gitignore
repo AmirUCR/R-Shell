@@ -33,6 +33,7 @@
 *.app
 rshell
 test
+proto
 
 # CMake Temp Files
 CMakeCache.txt
