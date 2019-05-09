@@ -13,8 +13,8 @@ class Connector : public Command {
     Command* rhsCMD;    // right child
 
     public:
-    Connector(Command*, Command*);  // Save lhs and rhs commands
-    bool execute();
+    Connector() : Command() {};
+    virtual bool execute() = 0;
 };
 
 
