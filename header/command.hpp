@@ -1,4 +1,4 @@
-class command {
+class Command {
     public: 
     virtual bool execute() = 0;
 };
