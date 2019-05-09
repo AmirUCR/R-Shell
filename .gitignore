@@ -35,6 +35,9 @@ rshell
 test
 proto
 
+# VS Code bin
+*.bin
+
 # CMake Temp Files
 CMakeCache.txt
 CMakeFiles
