@@ -6,7 +6,7 @@ using namespace std;
 
 class And : public Connector {
     public:
-    And(Command*, Command*);    // Initialize
+    And(Command*, Command*) : Connector() {};    // Initialize
     bool execute();             // Only return true if left child
                                 // and right child execute both return true
 };
