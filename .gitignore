@@ -38,6 +38,7 @@ proto
 # VS Code
 *.bin
 *.ipch
+*.json
 
 # CMake Temp Files
 CMakeCache.txt
