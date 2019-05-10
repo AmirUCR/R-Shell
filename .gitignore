@@ -39,6 +39,10 @@ proto
 *.bin
 *.ipch
 *.json
+*.vs
+*.suo
+*.db
+*.opendb
 
 # CMake Temp Files
 CMakeCache.txt
