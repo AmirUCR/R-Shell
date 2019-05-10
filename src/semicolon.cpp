@@ -1,5 +1,3 @@
-#ifndef SEMICOLON_H
-#define SEMICOLON_H
 #include "../header/semicolon.hpp"
 
 Semicolon::Semicolon(Command* lhs, Command* rhs) {
@@ -27,6 +25,3 @@ bool Semicolon::execute() {
         return false;
     }
 }
-
-
-#endif // END OF SEMICOLON_H
