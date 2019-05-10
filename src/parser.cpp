@@ -2,15 +2,12 @@
 
 Parser::Parser() {
 	cout << "$ ";
-	//getline(cin, input);
+	getline(cin, input);
 	this->Parse();
 }
 
 void Parser::Parse() {
 	vector<string> tokenized;
-
-	//input = "     echo hi && echo \"echo && hi\" && echo \" substr sucks  \"#32i09i209ueq        ";
-	input = "   echo hi && echo bye && echo why; \" wadgawdyag echo Tie #u8qiydiqygwdatwldtg         ";
 
 	// We erase anything after # -- Don't want to parse comments
 	size_t findComment = input.find('#');
