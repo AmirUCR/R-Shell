@@ -1,5 +1,3 @@
-#ifndef OR_H
-#define OR_H
 #include "../header/or.hpp"
 
 Or::Or(Command* lhs, Command* rhs) {
@@ -21,6 +19,3 @@ bool Or::execute() {
 
     return true;    // If lhs succeeds, return true. Skip executing rhs.
 }
-
-
-#endif // END OF OR_H
