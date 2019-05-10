@@ -1,5 +1,5 @@
-#ifndef CONNECTOR_H
-#define CONNECTOR_H
+#ifndef AND_H
+#define AND_H
 #include "connector.hpp"
 
 using namespace std;
@@ -11,4 +11,4 @@ class And : public Connector {
                                 // and right child execute both return true
 };
 
-#endif  // END OF CONNECTOR_H
+#endif  // END OF AND_H

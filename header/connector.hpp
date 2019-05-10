@@ -1,5 +1,5 @@
-#ifndef COMMAND_H
-#define COMMAND_H
+#ifndef CONNECTOR_H
+#define CONNECTOR_H
 #include "command.hpp"
 
 using namespace std;
@@ -18,4 +18,4 @@ class Connector : public Command {
 };
 
 
-#endif // END OF COMMAND_H
+#endif // END OF CONNECTOR_H
