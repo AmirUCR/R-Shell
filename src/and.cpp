@@ -1,5 +1,3 @@
-#ifndef AND_H
-#define AND_H
 #include "../header/and.hpp"
 
 And::And(Command* lhs, Command* rhs) {
@@ -21,6 +19,3 @@ bool And::execute() {
 
     return false;
 }
-
-
-#endif // END OF AND_H
