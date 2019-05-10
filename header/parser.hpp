@@ -2,15 +2,18 @@
 #define PARSER_H
 
 #include <string>
-#include <vector>
 #include <iostream>
+#include <stack>
+#include <vector>
+#include "command.hpp"
 
 using namespace std;
 
 class Parser {
 	private:
 	string input;	// Holds user's command line input
-	vector<string> commands;
+	//vector<string> commands;
+	stack<Command*> commands;
 
 	public:
 	Parser();		// Get user input and store it
