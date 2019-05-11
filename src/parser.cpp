@@ -23,7 +23,7 @@ void Parser::Parse() {
 	// Trim start and trailing whitespace
 	size_t firstChar = input.find_first_not_of(' ');
 	size_t lastChar = input.find_last_not_of(' ');
-	size_t inputRange = firstChar - lastChar + 1;
+	size_t inputRange = lastChar - firstChar + 1;
 	input = input.substr(firstChar, inputRange);
 
 	unsigned current = 0;
@@ -31,7 +31,6 @@ void Parser::Parse() {
 
 	// Begin tokenizing
 	while (current < input.length()) {
-
 		// When we find a quotation mark...
 		if (input[current] == '"') {
 			trail = current + 1;
@@ -77,11 +76,7 @@ void Parser::Parse() {
 		current++;		// We are at a character
 	}
 
-	this->MakeTree(tokenized);	
-
-	// for (auto &str : tokenized) {
-	// 	cout << str << endl;
-	// }
+	this->MakeTree(tokenized);
 }
 
 bool Parser::isOperator(string &s) {
@@ -106,35 +101,45 @@ Connector* Parser::WhichConnector(string &s) {
 
 void Parser::MakeTree(vector<string> &tokenized) {
 	vector<string>::iterator it = tokenized.begin();
-	string argsList;
+	vector<string> argsVector;
+	vector<char*> cstrings;
 	string name;
 	Connector* lastConnector = 0;
 
 	for (it; it != tokenized.end(); it++) {
 		// If it's a word
 		if (!isOperator(*it)) {
-			argsList.append(*it + " ");
+			argsVector.push_back(*it);
 
 			if ((it + 1) == tokenized.end() || isOperator(*(it + 1))) {
-				char * cstr = new char [argsList.length() + 1];
-				strcpy(cstr, argsList.c_str());
-				
-				int i = 0;
-				while (argsList[i] != ' ') {
-					i++;
+                
+				for(auto& s: argsVector) {
+					cstrings.push_back(&s[0]);
 				}
 
-				name = argsList.substr(0, i);
+				char** argList = new char*[argsVector.size() + 1];
 
-				Executable* exec = new Executable(name, cstr);
+				for (int i = 0; i < cstrings.size(); i++) {
+					argList[i] = cstrings[i];
+				}
+
+				argList[argsVector.size()] = NULL;
+            	
+				Executable* exec = new Executable(argList[0], argList);
+
+				cout << "Pushing " << argList[0] << " onto stack\n";
+				cout << "Arguments are: \n";
+				for (int i = 0; i < 2; i++) {
+					cout << argList[i] << endl;
+				}
 
 				commands.push(exec);
+				cstrings.clear();
+				argsVector.clear();
 			}
 		}
 		else if (isOperator(*it)) {
 			lastConnector = WhichConnector(*it);
-
-			argsList.clear();
 		}
 
 		if (commands.size() >= 2 && lastConnector != 0) {
