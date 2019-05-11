@@ -127,11 +127,11 @@ void Parser::MakeTree(vector<string> &tokenized) {
             	
 				Executable* exec = new Executable(argList[0], argList);
 
-				cout << "Pushing " << argList[0] << " onto stack\n";
-				cout << "Arguments are: \n";
-				for (int i = 0; i < 2; i++) {
-					cout << argList[i] << endl;
-				}
+				// cout << "Pushing " << argList[0] << " onto stack\n";
+				// cout << "Arguments are: \n";
+				// for (int i = 0; i < 2; i++) {
+				// 	cout << argList[i] << endl;
+				// }
 
 				commands.push(exec);
 				cstrings.clear();

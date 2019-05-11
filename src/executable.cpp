@@ -21,7 +21,12 @@ bool Executable::execute() {
     }
  
     if (pid == 0) {
-        execvp(execName, argList);
+		// cout << "Arguments are: \n";
+		// for (int i = 0; i < 2; i++) {
+		//     cout << argList[i] << endl;
+		// }
+
+        execvp(this->execName, this->argList);
        // this->successExec = false; 
         exit(1); 
     }

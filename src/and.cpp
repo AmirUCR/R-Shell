@@ -7,7 +7,7 @@ bool And::execute() {
     // We only execute the rhs command if lhs succeeds.
     // If both lhs and rhs succeed, return true.
     if (lhsCMD->execute()) {
-        if(rhsCMD->execute()) {
+        if (rhsCMD->execute()) {
             return true;
         }
     }
