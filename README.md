@@ -41,43 +41,31 @@ The design patter we use for this program is the **Composite Pattern**. The user
 
 
 **Class And**
-* Takes in two Command pointer type objects (can be an Executable or another Command) and calls evaluate on them.
-
-* Overrides evaluate
-  * The evaluate function returns true if both lhsEval and rhsEval are true
+* Takes in two Command pointer type objects (can be an Executable or another Command) and calls execute on them.
 
 * Overrides execute
-  * The execute function takes lhs and rhs Command pointer types and instantiatesnew Command objects.
+  * The execute function takes lhs and rhs Command pointer types and instantiates new Command objects, returning true if both lhs and rhs return true. 
 
 
 **Class Semicolon**
-* Takes in two Command pointer type objects (can be an Executable or another Command) and calls evaluate on them.
-
-* Overrides evaluate
-  * The evaluate function returns the status of the rhsEval
+* Takes in two Command pointer type objects (can be an Executable or another Command) and calls execute. 
 
 * Overrides execute
-  * The execute function takes lhs and rhs Command pointer types and instantiatesnew Command objects.
+  * The execute function takes lhs and rhs Command pointer types and instantiatesnew Command objects and returns the status of the rhsEval.
 
 
 **Class Pipe**
-* Takes in two Command pointer type objects (can be an Executable or another Command) and calls evaluate on them.
-
-* Overrides evaluate
-  * The evaluate function returns true if either of rhsEval or rhsEval is true
+* Takes in two Command pointer type objects (can be an Executable or another Command) and calls execute on them.
 
 * Overrides execute
-  * The execute function takes lhs and rhs Command pointer types and instantiatesnew Command objects.
+  * The execute function takes lhs and rhs Command pointer types and instantiates new Command objects, returning true if either rhsEval or lhsEval is true. 
 
 
 **Class Executable**
 * Takes in an executable name as well as a vector of string type arguments.
 
-* Overrides evaluate
-  * The evaluate function returns the variable successFail, the status of whether the executable is executed or not (true or false).
-
 * Overrides execute
-  * This function performs the appropriate syscall, execvp, and waitpid operations to run the given executable name. It also sets the true/false flag for bool successFail. If the execName argument is exit, it does not make a syscall. We early abandon by shutting down the shell.
+  * This function performs the appropriate syscall, execvp, and waitpid operations to run the given executable name and returns true if the execution succeeds. If the execName argument is exit, it does not make a syscall. We early abandon by shutting down the shell.
 
 
 **Class Parser**
