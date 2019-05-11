@@ -7,16 +7,15 @@
 #include <vector>
 #include "command.hpp"
 #include "executable.h"
-#include "Or.hpp"
-#include "And.hpp"
-#include "Semicolon.hpp"
+#include "or.hpp"
+#include "and.hpp"
+#include "semicolon.hpp"
 
 using namespace std;
 
 class Parser {
 	private:
 	string input;	// Holds user's command line input
-	//vector<string> commands;
 	stack<Command*> commands;
 
 	Connector* WhichConnector(string &s);
