@@ -6,9 +6,6 @@ using namespace std;
 
 class Connector : public Command {
     protected:
-    bool lhsEval;   // Determine if left child succeeded
-    bool rhsEval;   // If right child succeeded
-
     Command* lhsCMD;    // left child
     Command* rhsCMD;    // right child
 
