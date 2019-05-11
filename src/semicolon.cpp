@@ -1,10 +1,5 @@
 #include "../header/semicolon.hpp"
 
-Semicolon::Semicolon(Command* lhs, Command* rhs) {
-    this->lhsCMD = lhs;
-    this->rhsCMD = rhs;
-}
-
 // The Seimicolon executes both lhs and rhs
 bool Semicolon::execute() {
     bool lhs_flag = false;
@@ -25,3 +20,11 @@ bool Semicolon::execute() {
         return false;
     }
 }
+
+void Semicolon::SetLeft(Command* c) {
+    this->lhsCMD = c;
+}
+void Semicolon::SetRight(Command* c) {
+    this->rhsCMD = c;
+}
+

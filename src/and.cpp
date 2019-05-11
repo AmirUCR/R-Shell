@@ -1,10 +1,5 @@
 #include "../header/and.hpp"
 
-And::And(Command* lhs, Command* rhs) {
-    this->lhsCMD = lhs;
-    this->rhsCMD = rhs;
-}
-
 // The And only executes rhs if lhs fails.
 bool And::execute() {
 
@@ -18,4 +13,11 @@ bool And::execute() {
     }
 
     return false;
+}
+
+void And::SetLeft(Command* c) {
+    this->lhsCMD = c;
+}
+void And::SetRight(Command* c) {
+    this->rhsCMD = c;
 }
