@@ -7,31 +7,30 @@
 
 using namespace std; 
 
-bool Executable::execute(){
+bool Executable::execute() {
+
     int status; 
     pid_t pid = fork(); 
     
-    if (execName == "exit"){
+    if (execName == "exit") {
         exit(0); 
     }
 
-    if(pid<0){
+    if (pid < 0) {
         perror("Failure to fork");
     }
  
-    if(pid == 0){
+    if (pid == 0) {
         execvp(execName, argList);
        // this->successExec = false; 
         exit(1); 
     }
 
-    else{
+    else {
       waitpid(pid, &status, 0); 
-      if(status == 0){
-
+      if (status == 0) {
           return true; 
       }
-     
        return false;  
     }
 
