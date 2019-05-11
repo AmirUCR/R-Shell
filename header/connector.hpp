@@ -14,6 +14,8 @@ class Connector : public Command {
 
     public:
     Connector() : Command() {};
+    virtual void SetLeft(Command*) = 0;
+    virtual void SetRight(Command*) = 0;
     virtual bool execute() = 0;
 };
 
