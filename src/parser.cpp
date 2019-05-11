@@ -72,10 +72,74 @@ void Parser::Parse() {
 		current++;		// We are at a character
 	}
 
-	
+	this->MakeTree(tokenized);	
 
+	// for (auto &str : tokenized) {
+	// 	cout << str << endl;
+	// }
+}
 
-	for (auto &str : tokenized) {
-		cout << str << endl;
+bool Parser::isOperator(string &s) {
+	return (s == "&&" || s == ";" || s == "||") ? true : false;
+}
+
+Connector* Parser::WhichConnector(string &s) {
+	if (s == "&&") {
+		return new And();
 	}
+
+	if (s == "||") {
+		return new Or();
+	}
+
+	if (s == ";") {
+		return new Semicolon();
+	}
+}
+
+void Parser::MakeTree(vector<string> &tokenized) {
+	vector<string>::iterator it = tokenized.begin();
+	string argsList;
+	string name;
+	Connector* lastConnector;
+
+	while (it != tokenized.end()) {
+		while (!isOperator(*it)) {
+			argsList.append(*it + " ");
+			it++;
+		}
+		
+		// Found an operator
+		lastConnector = WhichConnector(*it);
+
+		char * cstr = new char [argsList.length() + 1];
+  		strcpy(cstr, argsList.c_str());
+		
+		int i = 0;
+		while (argsList[i] != ' ') {
+			i++;
+		}
+
+		name = argsList.substr(0, i);
+
+		Executable* exec = new Executable(name, &cstr);
+
+		commands.push(exec);
+
+		if (commands.size() >= 2) {
+			Command* rhs = commands.top();
+			commands.pop();
+			Command* lhs = commands.top();
+			commands.pop();
+
+			lastConnector->SetRight(rhs);
+			lastConnector->SetLeft(lhs);
+
+			commands.push(lastConnector);
+		}
+
+		it++;
+	}
+
+	lastConnector->execute();
 }
