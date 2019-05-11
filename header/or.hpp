@@ -6,7 +6,9 @@ using namespace std;
 
 class Or : public Connector {
     public:
-    Or(Command*, Command*) : Connector() {};    // Initialize
+    Or() : Connector() {};    // Initialize
+    void SetLeft(Command*);
+    void SetRight(Command*);
     bool execute();             // Only return true if left child
                                 // and right child execute both return true
 };
