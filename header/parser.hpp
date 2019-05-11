@@ -6,6 +6,10 @@
 #include <stack>
 #include <vector>
 #include "command.hpp"
+#include "executable.h"
+#include "Or.hpp"
+#include "And.hpp"
+#include "Semicolon.hpp"
 
 using namespace std;
 
@@ -15,12 +19,15 @@ class Parser {
 	//vector<string> commands;
 	stack<Command*> commands;
 
-	public:
-	Parser();		// Get user input and store it
-
+	Connector* WhichConnector(string &s);
+	bool isOperator(string &s);
+	void MakeTree(vector<string> &);
 	void Parse();	// Takes the user input and tokenizes it by "&& || ;" delimiters
 					// Instantiates executables as needed
 					// instantiates connectors as needed
+
+	public:
+	Parser();		// Get user input and store it	
 };
 
 #endif // END PARSER_H
