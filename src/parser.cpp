@@ -3,6 +3,7 @@
 #include "or.cpp"
 #include "semicolon.cpp"
 #include "executable.cpp"
+#include <cstring>
 
 Parser::Parser() {
 	cout << "$ ";
@@ -109,7 +110,7 @@ void Parser::MakeTree(vector<string> &tokenized) {
 	string name;
 	Connector* lastConnector = 0;
 
-	for (auto it = tokenized.begin(); it != tokenized.end(); it++) {
+	for (it; it != tokenized.end(); it++) {
 		// If it's a word
 		if (!isOperator(*it)) {
 			argsList.append(*it + " ");
