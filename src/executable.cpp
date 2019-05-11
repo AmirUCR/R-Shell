@@ -8,21 +8,33 @@
 using namespace std; 
 
 bool Executable::execute(){
-
+    int status; 
     pid_t pid = fork(); 
+    
+    if (execName == "exit"){
+        exit(0); 
+    }
 
-    if(pid>0){
-        exit(EXIT_FAILURE);
+    if(pid<0){
+        perror("Failure to fork");
     }
  
     if(pid == 0){
         execvp(execName, argList);
-        exit(0);
+       // this->successExec = false; 
+        exit(1); 
     }
 
     else{
-        waitpid(pid, int * status, 0);
-        return(status == 0);
+      waitpid(pid, &status, 0); 
+      if(status == 0){
+
+          return true; 
+      }
+     
+       return false;  
     }
+
+
 }
 

@@ -4,22 +4,24 @@
 #include "command.hpp"
 #include <string>
 
-using namespace std;
+using namespace std; 
 
 class Executable: public Command{
 
     private: 
-    char* argList;
-    string execName; 
- 
+    
+    char** argList;
+    const char* execName; 
+    bool successExec; 
     public: 
 
-    Executable(string execName, char* argList) {
+    Executable(const char* execName, char** argList){
         this->execName = execName; 
-        this->argList = argList; 
+        this->argList = argList;
+        this->successExec = true;  
     }
 
-    bool execute();
+    bool execute(); 
 
 }; 
 
