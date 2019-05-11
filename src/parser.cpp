@@ -1,4 +1,8 @@
-#include "..\header\parser.hpp"
+#include "../header/parser.hpp"
+#include "and.cpp"
+#include "or.cpp"
+#include "semicolon.cpp"
+#include "executable.cpp"
 
 Parser::Parser() {
 	cout << "$ ";
@@ -95,38 +99,44 @@ Connector* Parser::WhichConnector(string &s) {
 	if (s == ";") {
 		return new Semicolon();
 	}
+
+	return 0;
 }
 
 void Parser::MakeTree(vector<string> &tokenized) {
 	vector<string>::iterator it = tokenized.begin();
 	string argsList;
 	string name;
-	Connector* lastConnector;
+	Connector* lastConnector = 0;
 
-	while (it != tokenized.end()) {
-		while (!isOperator(*it)) {
+	for (auto it = tokenized.begin(); it != tokenized.end(); it++) {
+		// If it's a word
+		if (!isOperator(*it)) {
 			argsList.append(*it + " ");
-			it++;
+
+			if ((it + 1) == tokenized.end() || isOperator(*(it + 1))) {
+				char * cstr = new char [argsList.length() + 1];
+				strcpy(cstr, argsList.c_str());
+				
+				int i = 0;
+				while (argsList[i] != ' ') {
+					i++;
+				}
+
+				name = argsList.substr(0, i);
+
+				Executable* exec = new Executable(name, cstr);
+
+				commands.push(exec);
+			}
 		}
-		
-		// Found an operator
-		lastConnector = WhichConnector(*it);
+		else if (isOperator(*it)) {
+			lastConnector = WhichConnector(*it);
 
-		char * cstr = new char [argsList.length() + 1];
-  		strcpy(cstr, argsList.c_str());
-		
-		int i = 0;
-		while (argsList[i] != ' ') {
-			i++;
+			argsList.clear();
 		}
 
-		name = argsList.substr(0, i);
-
-		Executable* exec = new Executable(name, &cstr);
-
-		commands.push(exec);
-
-		if (commands.size() >= 2) {
+		if (commands.size() >= 2 && lastConnector != 0) {
 			Command* rhs = commands.top();
 			commands.pop();
 			Command* lhs = commands.top();
@@ -136,10 +146,11 @@ void Parser::MakeTree(vector<string> &tokenized) {
 			lastConnector->SetLeft(lhs);
 
 			commands.push(lastConnector);
-		}
 
-		it++;
+			lastConnector = 0;
+		}
 	}
 
-	lastConnector->execute();
+	commands.top()->execute();
+	commands.pop();
 }
