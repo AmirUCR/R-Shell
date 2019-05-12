@@ -8,6 +8,12 @@
 using namespace std; 
 
 bool Executable::execute() {
+    // cout << "Execute EXECUTABLE\n";
+
+    //         cout << "Before execvp\n";
+    //     for (int i = 0; i <  sizeof(argList)/sizeof(char*) + 1; ++i) {
+    //         cout << argList[i] << endl;
+    //     }
 
     int status; 
     pid_t pid = fork(); 
@@ -21,10 +27,7 @@ bool Executable::execute() {
     }
  
     if (pid == 0) {
-		// cout << "Arguments are: \n";
-		// for (int i = 0; i < 2; i++) {
-		//     cout << argList[i] << endl;
-		// }
+
 
         execvp(this->execName, this->argList);
        // this->successExec = false; 
@@ -34,8 +37,11 @@ bool Executable::execute() {
     else {
       waitpid(pid, &status, 0); 
       if (status == 0) {
+
+          delete [] argList;
           return true; 
       }
+       delete [] argList;
        return false;  
     }
 

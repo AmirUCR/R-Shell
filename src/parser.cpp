@@ -103,7 +103,6 @@ void Parser::MakeTree(vector<string> &tokenized) {
 	vector<string>::iterator it = tokenized.begin();
 	vector<string> argsVector;
 	vector<char*> cstrings;
-	string name;
 	Connector* lastConnector = 0;
 
 	for (it; it != tokenized.end(); it++) {
@@ -127,13 +126,16 @@ void Parser::MakeTree(vector<string> &tokenized) {
             	
 				Executable* exec = new Executable(argList[0], argList);
 
-				// cout << "Pushing " << argList[0] << " onto stack\n";
-				// cout << "Arguments are: \n";
-				// for (int i = 0; i < 2; i++) {
-				// 	cout << argList[i] << endl;
-				// }
-
 				commands.push(exec);
+
+				exec->whoAmI();
+
+				if (commands.size() >= 2 ) {
+					commands.top()->whoAmI();
+					commands.pop();
+					commands.top()->whoAmI();
+				}
+
 				cstrings.clear();
 				argsVector.clear();
 			}
@@ -141,6 +143,16 @@ void Parser::MakeTree(vector<string> &tokenized) {
 		else if (isOperator(*it)) {
 			lastConnector = WhichConnector(*it);
 		}
+
+		// char * argList[] = {"ls", "-a", NULL}; 
+		// char * argList1[] = {"echo", "hi", NULL}; 
+		// Executable* exec = new Executable(argList[0], argList);
+		// Executable* exec1 = new Executable(argList1[0], argList1);
+
+		// lastConnector = new And();
+
+		// commands.push(exec);
+		// commands.push(exec1);
 
 		if (commands.size() >= 2 && lastConnector != 0) {
 			Command* rhs = commands.top();
@@ -157,6 +169,7 @@ void Parser::MakeTree(vector<string> &tokenized) {
 		}
 	}
 
-	commands.top()->execute();
-	commands.pop();
+	commands.top()->whoAmI();
+	this->commands.top()->execute();
+	this->commands.pop();
 }

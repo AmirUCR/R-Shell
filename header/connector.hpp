@@ -5,9 +5,9 @@
 using namespace std;
 
 class Connector : public Command {
-    protected:
-    Command* lhsCMD;    // left child
-    Command* rhsCMD;    // right child
+    public:
+    Command* lhsCMD = 0;    // left child
+    Command* rhsCMD = 0;    // right child
 
     public:
     Connector() : Command() {};

@@ -11,6 +11,9 @@ class Or : public Connector {
     void SetRight(Command*);
     bool execute();             // Only return true if left child
                                 // and right child execute both return true
+    void whoAmI() {
+        return;
+    }
 };
 
 #endif  // END OF OR_H
