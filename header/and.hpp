@@ -11,8 +11,8 @@ class And : public Connector {
     void SetRight(Command*);
     bool execute();             // Only return true if left child
                                 // and right child execute both return true
-                                void whoAmI() {
-        return;
+    void whoAmI() {
+        cout << "I'm AND\n";
     }
 };
 

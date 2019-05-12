@@ -100,12 +100,11 @@ Connector* Parser::WhichConnector(string &s) {
 }
 
 void Parser::MakeTree(vector<string> &tokenized) {
-	vector<string>::iterator it = tokenized.begin();
-	vector<string> argsVector;
-	vector<char*> cstrings;
+	vector<string> argsVector{};
+	vector<char*> cstrings{};
 	Connector* lastConnector = 0;
 
-	for (it; it != tokenized.end(); it++) {
+	for (auto it = tokenized.begin(); it != tokenized.end(); it++) {
 		// If it's a word
 		if (!isOperator(*it)) {
 			argsVector.push_back(*it);
@@ -124,17 +123,19 @@ void Parser::MakeTree(vector<string> &tokenized) {
 
 				argList[argsVector.size()] = NULL;
             	
-				Executable* exec = new Executable(argList[0], argList);
+				commands.emplace(new Executable(argList[0], argList));
 
-				commands.push(exec);
-
-				exec->whoAmI();
-
-				if (commands.size() >= 2 ) {
-					commands.top()->whoAmI();
-					commands.pop();
-					commands.top()->whoAmI();
+				for (int i = 0; i < argsVector.size(); i++) {
+					cout << argList[i] << endl;
 				}
+
+				// commands.top()->whoAmI();
+
+				// if (commands.size() >= 2 ) {
+				// 	commands.top()->whoAmI();
+				// 	commands.pop();
+				// 	commands.top()->whoAmI();
+				// }
 
 				cstrings.clear();
 				argsVector.clear();
@@ -164,6 +165,8 @@ void Parser::MakeTree(vector<string> &tokenized) {
 			lastConnector->SetLeft(lhs);
 
 			commands.push(lastConnector);
+
+			commands.top()->whoAmI();
 
 			lastConnector = 0;
 		}
