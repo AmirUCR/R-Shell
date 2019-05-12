@@ -145,16 +145,6 @@ void Parser::MakeTree(vector<string> &tokenized) {
 			lastConnector = WhichConnector(*it);
 		}
 
-		// char * argList[] = {"ls", "-a", NULL}; 
-		// char * argList1[] = {"echo", "hi", NULL}; 
-		// Executable* exec = new Executable(argList[0], argList);
-		// Executable* exec1 = new Executable(argList1[0], argList1);
-
-		// lastConnector = new And();
-
-		// commands.push(exec);
-		// commands.push(exec1);
-
 		if (commands.size() >= 2 && lastConnector != 0) {
 			Command* rhs = commands.top();
 			commands.pop();
