@@ -13,18 +13,22 @@ class Executable: public Command {
     char** argList;
     const char* execName; 
     bool successExec;
+
     public:
 
     Executable(const char* execName, char** argList) : Command() {
         this->execName = execName; 
         this->argList = argList;
         this->successExec = true;
+        execute();
 
         // cout << "In constructor:\n";
         // for (int i = 0; i <  sizeof(argList)/sizeof(char*) + 1; ++i) {
         //     cout << argList[i] << endl;
         // }
     }
+
+    //bool Executable::Evaluate();
 
     bool execute(); 
     void whoAmI() {

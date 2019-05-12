@@ -8,6 +8,11 @@
 Parser::Parser() {
 	cout << "$ ";
 	getline(cin, input);
+
+	if (input.empty()) {
+		exit(1);
+	}
+
 	this->Parse();
 }
 
@@ -100,69 +105,41 @@ Connector* Parser::WhichConnector(string &s) {
 }
 
 void Parser::MakeTree(vector<string> &tokenized) {
-	vector<string> argsVector{};
-	vector<char*> cstrings{};
-	Connector* lastConnector = 0;
+	vector<char*> cstrings;
+	stack<Command*> commands{};
+	Connector* c = 0;
 
-	for (auto it = tokenized.begin(); it != tokenized.end(); it++) {
-		// If it's a word
-		if (!isOperator(*it)) {
-			argsVector.push_back(*it);
-
-			if ((it + 1) == tokenized.end() || isOperator(*(it + 1))) {
-                
-				for(auto& s: argsVector) {
-					cstrings.push_back(&s[0]);
-				}
-
-				char** argList = new char*[argsVector.size() + 1];
-
-				for (int i = 0; i < cstrings.size(); i++) {
-					argList[i] = cstrings[i];
-				}
-
-				argList[argsVector.size()] = NULL;
-            	
-				commands.emplace(new Executable(argList[0], argList));
-
-				for (int i = 0; i < argsVector.size(); i++) {
-					cout << argList[i] << endl;
-				}
-
-				// commands.top()->whoAmI();
-
-				// if (commands.size() >= 2 ) {
-				// 	commands.top()->whoAmI();
-				// 	commands.pop();
-				// 	commands.top()->whoAmI();
-				// }
-
-				cstrings.clear();
-				argsVector.clear();
-			}
+	for (int i = 0; i < tokenized.size(); i++) {
+		if (isOperator(tokenized.at(i))) {
+			//cout << "Setting connector: " <<  &tokenized[i][0] << endl;
+			c = WhichConnector(tokenized.at(i));
 		}
-		else if (isOperator(*it)) {
-			lastConnector = WhichConnector(*it);
+		else {
+			//cout << "Pushing: " <<  &tokenized[i][0] << endl;
+			cstrings.push_back(&tokenized[i][0]);
 		}
 
-		if (commands.size() >= 2 && lastConnector != 0) {
-			Command* rhs = commands.top();
+		if ((i + 1 != tokenized.size()) && isOperator(tokenized.at(i + 1)) || i + 1 == tokenized.size()) {
+			commands.emplace(new Executable(cstrings[0], cstrings.data()));
+			cstrings.clear();
+		}
+
+		if (commands.size() >= 2) {
+			Command* left = commands.top();
+			//left->whoAmI();
+
 			commands.pop();
-			Command* lhs = commands.top();
+			Command* right = commands.top();
+			//right->whoAmI();
 			commands.pop();
 
-			lastConnector->SetRight(rhs);
-			lastConnector->SetLeft(lhs);
+			c->SetLeft(left);
+			c->SetRight(right);
 
-			commands.push(lastConnector);
-
-			commands.top()->whoAmI();
-
-			lastConnector = 0;
+			commands.push(c);
 		}
 	}
-
-	commands.top()->whoAmI();
-	this->commands.top()->execute();
-	this->commands.pop();
+	//commands.top()->whoAmI();
+	commands.top()->execute();
+	commands.pop();
 }

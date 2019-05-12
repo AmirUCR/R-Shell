@@ -16,7 +16,7 @@ using namespace std;
 class Parser {
 	private:
 	string input{};	// Holds user's command line input
-	stack<Command*> commands{};
+	//stack<Command*> commands{};
 
 	Connector* WhichConnector(string &s);
 	bool isOperator(string &s);

@@ -7,6 +7,10 @@
 
 using namespace std; 
 
+// bool Executable::Evaluate() {
+//     return successExec;
+// }
+
 bool Executable::execute() {
     // cout << "Execute EXECUTABLE\n";
 
@@ -14,6 +18,7 @@ bool Executable::execute() {
     //     for (int i = 0; i <  sizeof(argList)/sizeof(char*) + 1; ++i) {
     //         cout << argList[i] << endl;
     //     }
+    
 
     int status; 
     pid_t pid = fork(); 
