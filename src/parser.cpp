@@ -105,32 +105,47 @@ Connector* Parser::WhichConnector(string &s) {
 }
 
 void Parser::MakeTree(vector<string> &tokenized) {
-	vector<char*> cstrings;
-	stack<Command*> commands{};
-	Connector* c = 0;
+	vector<string> temp{};		// All string values before a connector reside here
+
+	stack<Command*> commands{};		// The stack we put our connectors and executables on
+	Connector* c = 0;		// Keep a reference to the last connector
 
 	for (int i = 0; i < tokenized.size(); i++) {
+
+		// If we are at a connector
 		if (isOperator(tokenized.at(i))) {
-			//cout << "Setting connector: " <<  &tokenized[i][0] << endl;
+			
+			// Save it
 			c = WhichConnector(tokenized.at(i));
 		}
 		else {
-			//cout << "Pushing: " <<  &tokenized[i][0] << endl;
-			cstrings.push_back(&tokenized[i][0]);
+			
+			// If not a connector, push to temp
+			temp.push_back(tokenized[i]);
 		}
 
+		// If the next string is not the end, and if it's a connector -- Or if we are at the end..
 		if ((i + 1 != tokenized.size()) && isOperator(tokenized.at(i + 1)) || i + 1 == tokenized.size()) {
+			
+			// Create a new vector of char*
+			vector<char*> cstrings;
+
+			// Copy values (such as "echo", "hi") from temp to cstrings
+			for(auto& s: temp) {
+            	cstrings.push_back(&s[0]);
+			}
+
+			// Create a new executable and push onto stack
 			commands.emplace(new Executable(cstrings[0], cstrings.data()));
-			cstrings.clear();
+
+			// Clear temp for new data
+			temp.clear();
 		}
 
 		if (commands.size() >= 2) {
 			Command* left = commands.top();
-			//left->whoAmI();
-
 			commands.pop();
 			Command* right = commands.top();
-			//right->whoAmI();
 			commands.pop();
 
 			c->SetLeft(left);
@@ -139,7 +154,7 @@ void Parser::MakeTree(vector<string> &tokenized) {
 			commands.push(c);
 		}
 	}
-	//commands.top()->whoAmI();
+
 	commands.top()->execute();
 	commands.pop();
 }
