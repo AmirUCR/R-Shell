@@ -5,20 +5,9 @@
 #include <stdlib.h>
 #include <sys/wait.h>
 
-using namespace std; 
-
-// bool Executable::Evaluate() {
-//     return successExec;
-// }
+using namespace std;
 
 bool Executable::execute() {
-    // cout << "Execute EXECUTABLE\n";
-
-    //         cout << "Before execvp\n";
-    //     for (int i = 0; i <  sizeof(argList)/sizeof(char*) + 1; ++i) {
-    //         cout << argList[i] << endl;
-    //     }
-    
 
     int status; 
     pid_t pid = fork(); 
@@ -32,8 +21,6 @@ bool Executable::execute() {
     }
  
     if (pid == 0) {
-
-
         execvp(this->execName, this->argList);
        // this->successExec = false; 
         exit(1); 
@@ -42,14 +29,9 @@ bool Executable::execute() {
     else {
       waitpid(pid, &status, 0); 
       if (status == 0) {
-
-          delete [] argList;
           return true; 
       }
-       delete [] argList;
        return false;  
     }
-
-
 }
 

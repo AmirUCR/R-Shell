@@ -20,15 +20,7 @@ class Executable: public Command {
         this->execName = execName; 
         this->argList = argList;
         this->successExec = true;
-        execute();
-
-        // cout << "In constructor:\n";
-        // for (int i = 0; i <  sizeof(argList)/sizeof(char*) + 1; ++i) {
-        //     cout << argList[i] << endl;
-        // }
     }
-
-    //bool Executable::Evaluate();
 
     bool execute(); 
     void whoAmI() {
