@@ -22,10 +22,7 @@ class Executable: public Command {
         this->successExec = true;
     }
 
-    bool execute(); 
-    void whoAmI() {
-        cout << "I am " << execName << endl;
-    }
+    bool execute();
 }; 
 
 #endif
