@@ -22,12 +22,12 @@ Where you can pass in any number of commands separated by any of ||, &&, or ; wh
 
 The executable can be any program that is located at one of the PATH environment variable locations. Moreover, the [argumentList] is simply a list of zero or more arguments separated by spaces.
 
-The design pattern we use for this program is the **Composite Pattern**. The user input is taken by the Parser and each word is tokenized and stored in a vector. We may use stacks and queues to build an expression tree of executable and connector objects, however, this decision is not concrete as of this time. From there, each connector will make a call to the execute function of its lhs and rhhs children and, depending on the success or failure of these children, the connector will make its own execute function return true or false. Each Executable object uses execvp, syscall forks, and waitpid to carry out its job.
+The design pattern we use for this program is the **Composite Pattern**. The user input is taken by the Parser and each word is tokenized and stored in a vector. All strings before a connector is transformed into an Exectuable object. This Exectuable is then pushed onto a stack. If there are >= 2 Commands on the stack, we take the last connector, and assign to it a left and a right Command child (this child can be another Connector, or an Exectuable). From there, each connector will make a call to the execute function of its lhs and rhs children and, depending on the success or failure of these children, the connector will make its own execute function return true or false. Each Executable object uses execvp, syscall forks, and waitpid to carry out its job.
 
 # Diagram
 ![UML Diagram for RShell](https://github.com/cs100/spring-2019-assignment-cs100-dance-team/blob/master/images/UMLDiagram.png)
 # Classes
-**Abstract Class Base**
+**Abstract Class Command**
 * Pure-Virtual function execute()
   * The ; connector's execute only returns the status of its RHS
   * The && connector's execute returns whether if both LHS and RHS are true
@@ -36,8 +36,8 @@ The design pattern we use for this program is the **Composite Pattern**. The use
 
 **Abstract Base Connector**
 * Provides the base class for the other connectors
-* Contains protected member variables that other connectors inherit
 * Contains base function execute
+* Contains a set left child and a set right child function.
 
 
 **Class And**
@@ -62,21 +62,19 @@ The design pattern we use for this program is the **Composite Pattern**. The use
 
 
 **Class Executable**
-* Takes in an executable name as well as a vector of string type arguments.
+* Takes in an executable name as well as an array of character type arguments.
 
 * Overrides execute
   * This function performs the appropriate syscall, execvp, and waitpid operations to run the given executable name and returns true if the execution succeeds. If the execName argument is exit, it does not make a syscall. We early abandon by shutting down the shell.
 
 
 **Class Parser**
-* Has references to the Base classes (Connector, Executable) in order to instantiate such objects.
+* Has references to the abstract base Command classes (Connector, Executable) in order to instantiate such objects.
+
 * Called in main to get the user input on the command shell.
 
-* GetInput
-  * Takes the user input string and stores it in the userInput variable.
-
 * Parse
-  * Tokenizes the userInput. Stores the tokenized words in the commands vector.
+  * Takes the user input string and stores it in the string input variable. Tokenizes the userInput. Stores the tokenized words in a vector.
 
 # FORK, EXECVP, AND WAITPID
 
@@ -174,9 +172,8 @@ waitpid(-1, &status, 0);
 # Development and Testing Roadmap
 
 ## Classes and Functions
-1. [Abstract Class Base](https://github.com/cs100/spring-2019-assignment-cs100-dance-team/issues/1)
+1. [Abstract Class Command](https://github.com/cs100/spring-2019-assignment-cs100-dance-team/issues/1)
 1. [Parser Class](https://github.com/cs100/spring-2019-assignment-cs100-dance-team/issues/2)
-    1. Create the function GetInput
     1. Create the function Parse
 1. [Executable Class](https://github.com/cs100/spring-2019-assignment-cs100-dance-team/issues/3)
     1. Create the execute function. This function should handle the special command _exit_ as well as any other command using execvp, syscall forks, and waitpid. It will return true if the execution succeeds and false otherwise. 
