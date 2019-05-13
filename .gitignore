@@ -44,6 +44,9 @@ proto
 *.db
 *.opendb
 
+# Integration test file outputs
+multiple_command_tests_output.txt
+
 # CMake Temp Files
 CMakeCache.txt
 CMakeFiles
