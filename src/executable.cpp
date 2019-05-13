@@ -22,7 +22,6 @@ bool Executable::execute() {
  
     if (pid == 0) {
         execvp(this->execName, this->argList);
-       // this->successExec = false; 
         exit(1); 
     }
 

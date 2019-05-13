@@ -9,10 +9,6 @@ Parser::Parser() {
 	cout << "$ ";
 	getline(cin, input);
 
-	// if (input.empty()) {
-	// 	exit(1);
-	// }
-
 	this->Parse();
 }
 

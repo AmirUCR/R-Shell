@@ -2,7 +2,6 @@
 
 // The And only executes rhs if lhs fails.
 bool And::execute() {
-    //cout << "Execute AND\n";
 
     // We call both lhs and rhs commands to execute.
     // We only execute the rhs command if lhs succeeds.
