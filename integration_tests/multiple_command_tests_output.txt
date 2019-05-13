@@ -1,0 +1,26 @@
+$ hi
+.
+..
+commented_command_tests.sh
+exit_command_tests.sh
+input.txt
+multiple_commands_tests.sh
+multiple_command_tests_output.txt
+single_command_tests.sh
+bye
+On branch AmirUCR
+Your branch is ahead of 'origin/AmirUCR' by 13 commits.
+  (use "git push" to publish your local commits)
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git checkout -- <file>..." to discard changes in working directory)
+
+	modified:   multiple_commands_tests.sh
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+
+	input.txt
+
+no changes added to commit (use "git add" and/or "git commit -a")

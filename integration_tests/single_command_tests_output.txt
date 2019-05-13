@@ -1,0 +1,1 @@
+$ This is a quoted string && this is also one!
