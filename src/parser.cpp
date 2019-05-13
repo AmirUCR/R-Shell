@@ -9,9 +9,9 @@ Parser::Parser() {
 	cout << "$ ";
 	getline(cin, input);
 
-	if (input.empty()) {
-		exit(1);
-	}
+	// if (input.empty()) {
+	// 	exit(1);
+	// }
 
 	this->Parse();
 }
@@ -29,7 +29,15 @@ void Parser::Parse() {
 	size_t firstChar = input.find_first_not_of(' ');
 	size_t lastChar = input.find_last_not_of(' ');
 	size_t inputRange = lastChar - firstChar + 1;
-	input = input.substr(firstChar, inputRange);
+
+	// If input is just whitespace, quit.
+	if (firstChar == string::npos && lastChar == string::npos) {
+		exit(1);
+	}
+
+	if (!input.empty()) {
+		input = input.substr(firstChar, inputRange);
+	}
 
 	unsigned current = 0;
 	unsigned trail = 0;
@@ -105,10 +113,10 @@ Connector* Parser::WhichConnector(string &s) {
 }
 
 void Parser::MakeTree(vector<string> &tokenized) {
-	vector<string> temp{};		// All string values before a connector reside here
-
 	stack<Command*> commands{};		// The stack we put our connectors and executables on
 	Connector* c = 0;		// Keep a reference to the last connector
+	vector<vector<char*>> cstrings(tokenized.size());
+	int index = 0;
 
 	for (int i = 0; i < tokenized.size(); i++) {
 
@@ -121,31 +129,24 @@ void Parser::MakeTree(vector<string> &tokenized) {
 		else {
 			
 			// If not a connector, push to temp
-			temp.push_back(tokenized[i]);
+			cstrings[index].push_back(&tokenized[i][0]);
 		}
 
 		// If the next string is not the end, and if it's a connector -- Or if we are at the end..
 		if ((i + 1 != tokenized.size()) && isOperator(tokenized.at(i + 1)) || i + 1 == tokenized.size()) {
-			
-			// Create a new vector of char*
-			vector<char*> cstrings;
 
-			// Copy values (such as "echo", "hi") from temp to cstrings
-			for(auto& s: temp) {
-            	cstrings.push_back(&s[0]);
-			}
+			cstrings[index].push_back(NULL);
 
 			// Create a new executable and push onto stack
-			commands.emplace(new Executable(cstrings[0], cstrings.data()));
+			commands.emplace(new Executable(cstrings[index][0], cstrings[index].data()));
 
-			// Clear temp for new data
-			temp.clear();
+			index++;
 		}
 
 		if (commands.size() >= 2) {
-			Command* left = commands.top();
-			commands.pop();
 			Command* right = commands.top();
+			commands.pop();
+			Command* left = commands.top();
 			commands.pop();
 
 			c->SetLeft(left);
@@ -155,6 +156,8 @@ void Parser::MakeTree(vector<string> &tokenized) {
 		}
 	}
 
-	commands.top()->execute();
-	commands.pop();
+	if (!commands.empty()) {
+		commands.top()->execute();
+		commands.pop();
+	}
 }
