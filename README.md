@@ -22,7 +22,7 @@ Where you can pass in any number of commands separated by any of ||, &&, or ; wh
 
 The executable can be any program that is located at one of the PATH environment variable locations. Moreover, the [argumentList] is simply a list of zero or more arguments separated by spaces.
 
-The design patter we use for this program is the **Composite Pattern**. The user input is taken by the Parser and each word is tokenized and stored in a vector. We may use stacks and queues to build an expression tree of executable and connector objects, however, this decision is not concrete as of this time. From there, each connector will query the evaluate function of its lhs and rhs to see if they succeeded or failed. Depending on these evaluates, the connector will make its own evaluate function which returns an appropriate true or false depending on the connector type. Each Executable object uses execvp, syscall forks, and waitpid to carry out its job.
+The design pattern we use for this program is the **Composite Pattern**. The user input is taken by the Parser and each word is tokenized and stored in a vector. We may use stacks and queues to build an expression tree of executable and connector objects, however, this decision is not concrete as of this time. From there, each connector will make a call to the execute function of its lhs and rhhs children and, depending on the success or failure of these children, the connector will make its own execute function return true or false. Each Executable object uses execvp, syscall forks, and waitpid to carry out its job.
 
 # Diagram
 ![UML Diagram for RShell](https://github.com/cs100/spring-2019-assignment-cs100-dance-team/blob/master/images/UMLDiagram.png)
@@ -51,7 +51,7 @@ The design patter we use for this program is the **Composite Pattern**. The user
 * Takes in two Command pointer type objects (can be an Executable or another Command) and calls execute. 
 
 * Overrides execute
-  * The execute function takes lhs and rhs Command pointer types and instantiatesnew Command objects and returns the status of the rhsEval.
+  * The execute function takes lhs and rhs Command pointer types and instantiates new Command objects and returns the status of the rhsEval.
 
 
 **Class Pipe**
@@ -226,7 +226,7 @@ waitpid(-1, &status, 0);
 1. Test execute by passing in two valid Command type objects and expect True
 1. Test execute by passing in one valid and one invalid Command type objects and expect False
      1. Expect the rhs to run even if lhs fails
-1. Test evaluate by passing in two invalid Command type objects and expect False
+1. Test execute by passing in two invalid Command type objects and expect False
 
 ### [Pipe](https://github.com/cs100/spring-2019-assignment-cs100-dance-team/issues/14)
 1. Test the constructor by using a temporary getter function
