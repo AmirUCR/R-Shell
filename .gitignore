@@ -35,6 +35,7 @@ rshell
 test
 proto
 Makefile
+*.cmake
 
 # VS Code
 *.bin
