@@ -6,7 +6,6 @@
 #include <cstring>
 
 Parser::Parser() {
-	cout << "$ ";
 	getline(cin, input);
 
 	this->Parse();
@@ -31,12 +30,13 @@ void Parser::Parse() {
 		exit(1);
 	}
 
+	// Only trim whitespaces if input is not empty.
 	if (!input.empty()) {
 		input = input.substr(firstChar, inputRange);
 	}
 
-	unsigned current = 0;
-	unsigned trail = 0;
+	unsigned current{0};
+	unsigned trail{0};
 
 	// Begin tokenizing
 	while (current < input.length()) {
@@ -109,10 +109,11 @@ Connector* Parser::WhichConnector(string &s) {
 }
 
 void Parser::MakeTree(vector<string> &tokenized) {
-	stack<Command*> commands{};		// The stack we put our connectors and executables on
-	Connector* c = 0;		// Keep a reference to the last connector
+	stack<Command*> tree{};		// The stack we put our connectors and executables on
+	Connector* c{0};		// Keep a reference to the last connector
 	vector<vector<char*>> cstrings(tokenized.size());
-	int index = 0;
+	int index{0};
+
 
 	for (int i = 0; i < tokenized.size(); i++) {
 
@@ -134,26 +135,26 @@ void Parser::MakeTree(vector<string> &tokenized) {
 			cstrings[index].push_back(NULL);
 
 			// Create a new executable and push onto stack
-			commands.emplace(new Executable(cstrings[index][0], cstrings[index].data()));
+			tree.emplace(new Executable(cstrings[index][0], cstrings[index].data()));
 
 			index++;
 		}
 
-		if (commands.size() >= 2) {
-			Command* right = commands.top();
-			commands.pop();
-			Command* left = commands.top();
-			commands.pop();
+		if (tree.size() >= 2) {
+			Command* right = tree.top();
+			tree.pop();
+			Command* left = tree.top();
+			tree.pop();
 
 			c->SetLeft(left);
 			c->SetRight(right);
 
-			commands.push(c);
+			tree.push(c);
 		}
 	}
 
-	if (!commands.empty()) {
-		commands.top()->execute();
-		commands.pop();
+	if (!tree.empty()) {
+		tree.top()->execute();
+		tree.pop();
 	}
 }
