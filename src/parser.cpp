@@ -26,7 +26,7 @@ void Parser::parse() {
 
 	// If input is just whitespace, quit.
 	if (firstChar == string::npos && lastChar == string::npos) {
-		exit(1);
+		return;
 	}
 
 	// Only trim whitespaces if input is not empty.
