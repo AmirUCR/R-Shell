@@ -4,8 +4,12 @@
 
 using namespace std;
 
-int main() {
-    Parser* p = new Parser();
+int main(int argv, char** argc) {
+
+    while (true) {
+        cout << "$ ";
+        Parser* p = new Parser();
+    }
 
     return 0;
 }
