@@ -1,6 +1,6 @@
 #include "../header/semicolon.hpp"
 
-// The Seimicolon executes both lhs and rhs
+// The Semicolon executes both lhs and rhs
 bool Semicolon::execute() {
     bool lhs_flag = false;
     bool rhs_flag = false;
@@ -13,7 +13,7 @@ bool Semicolon::execute() {
         rhs_flag = true;
     }
 
-    // If both lhs and rhs did not succeed (false), then return false.
+    // If neither lhs or rhs succeeded (both were false), then return false.
     if (lhs_flag || rhs_flag) {
         return true;
     } else {
