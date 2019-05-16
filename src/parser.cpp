@@ -4,14 +4,13 @@
 #include "semicolon.cpp"
 #include "executable.cpp"
 #include <cstring>
+#include <queue>
 
-Parser::Parser() {
+void Parser::getInput() {
 	getline(cin, input);
-
-	this->Parse();
 }
 
-void Parser::Parse() {
+void Parser::parse() {
 	vector<string> tokenized;
 
 	// We erase anything after # -- Don't want to parse comments
@@ -113,6 +112,35 @@ void Parser::MakeTree(vector<string> &tokenized) {
 	Connector* c{0};		// Keep a reference to the last connector
 	vector<vector<char*>> cstrings(tokenized.size());
 	int index{0};
+
+
+	// string temp{};
+	// stack<string> operators{};
+	// queue<string> output{};
+	// vector<Executable*> execs{};
+
+	// for (int i = 0; i < tokenized.size(); i++) {
+	// 	string token = tokenized.at(i);
+
+	// 	// If the token is a command (not a connector)
+	// 	if (!isOperator(token)) {
+	// 		temp += token + " ";
+	// 	}
+
+	// 	else if (isOperator(token)) {
+	// 		while (!operators.empty() && token != "(") {
+
+	// 			if (!temp.empty()) {
+	// 				temp = temp.substr(0, temp.size() - 1);
+	// 			}
+
+	// 			output.push(operators.top());
+	// 			operators.pop();
+	// 		}
+
+	// 		operators.push(token);
+	// 	}
+	// }
 
 
 	for (int i = 0; i < tokenized.size(); i++) {
