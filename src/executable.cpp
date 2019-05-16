@@ -4,6 +4,7 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <sys/wait.h>
+#include <cstring>
 
 using namespace std;
 
@@ -12,7 +13,7 @@ bool Executable::execute() {
     int status; 
     pid_t pid = fork(); 
     
-    if (execName == "exit") {
+    if (strcmp(execName, "exit") == 0) {
         exit(0); 
     }
 
