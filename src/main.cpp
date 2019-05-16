@@ -4,11 +4,13 @@
 
 using namespace std;
 
-int main(int argv, char** argc) {
+int main() {
+    Parser* parser = new Parser();
 
     while (true) {
         cout << "$ ";
-        Parser* p = new Parser();
+        parser->getInput();
+        parser->parse();
     }
 
     return 0;
