@@ -7,6 +7,7 @@ using namespace std;
 int main() {
     Parser* parser = new Parser();
 
+    // Run our program until "exit" is entered
     while (true) {
         cout << "$ ";
         parser->getInput();
