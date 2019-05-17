@@ -169,55 +169,64 @@ Connector* Parser::WhichConnector(string &s) {
 
 // TODO:: Change name of fxn to ShuntingYard
 void Parser::MakeTree(vector<string> &tokenized) {
-	stack<Command*> tree{};		// The stack we put our connectors and executables on
-	Connector* c{0};		// Keep a reference to the last connector
-	vector<vector<char*>> cstrings(tokenized.size());
-	int index{0};
 
+	string temp{};
+	stack<string> operators{};
+	queue<string> output{};
 
 	for (int i = 0; i < tokenized.size(); i++) {
 
-		// If we are at a connector
+		// If the token is a word (not a connector or parentheses), keep going until we find one
+		while (!isOperator(tokenized.at(i)) && tokenized.at(i) != "(" && tokenized.at(i) != ")") {
+			temp += tokenized.at(i) + " ";
+			i++;
+
+
+			if (i >= tokenized.size() || isOperator(tokenized.at(i)) || tokenized.at(i) == "(" || tokenized.at(i) == ")") {
+				temp = temp.substr(0, temp.size() - 1);
+
+				output.push(temp);
+
+				if (i >= tokenized.size()) {
+					break;
+				}
+
+				temp = "";
+			}
+		}
+
+		if (i >= tokenized.size()) {
+			break;
+		}
+
 		if (isOperator(tokenized.at(i))) {
-			
-			// Save it
-			c = WhichConnector(tokenized.at(i));
-		}
-		else {
-			// If not a connector, push to temp
-			cstrings[index].push_back(&tokenized[i][0]);
-		}
+			while (!operators.empty() && operators.top() != "(") {
 
-		// If the next string is not the end, and if it's a connector -- Or if we are at the end..
-		if ((i + 1 != tokenized.size()) && isOperator(tokenized.at(i + 1)) || (i + 1 == tokenized.size() && !isOperator(tokenized.at(i)))) {
+				output.push(operators.top());
+				operators.pop();
+			}
 
-			// NULL terminate cstrings (execvp likes them..)
-			cstrings[index].push_back(NULL);
-
-			// Create a new executable and push it onto our stack
-			tree.emplace(new Executable(cstrings[index][0], cstrings[index].data()));
-
-			index++;
-		} else if (i + 1 == tokenized.size() && isOperator(tokenized.at(i)) && tokenized.at(i) != ";") {
-			cout << "r'shell: syntax error near unexpected token '" << tokenized.at(i) << "'\n";
-			return;
+			operators.push(tokenized.at(i));
 		}
 
-		if (tree.size() >= 2) {
-			Command* right = tree.top();
-			tree.pop();
-			Command* left = tree.top();
-			tree.pop();
+		else if (tokenized.at(i) == "(") {
+			operators.push(tokenized.at(i));
+		}
 
-			c->SetLeft(left);
-			c->SetRight(right);
+		else if (tokenized.at(i) == ")") {
+			while (operators.top() != "(") {
+				output.push(operators.top());
+				operators.pop();			
+			}
 
-			tree.push(c);
+			if (operators.top() == "(") {
+				operators.pop();
+			}
 		}
 	}
 
-	if (!tree.empty()) {
-		tree.top()->execute();
-		tree.pop();
+	while (!operators.empty()) {
+		output.push(operators.top());
+		operators.pop();
 	}
 }
