@@ -24,6 +24,10 @@ bool Parser::parenthesesMatch() {
 	return (count == 0) ? true : false;
 }
 
+// void Parser::removeComments(string &s)
+
+// void Parser::trim
+
 void Parser::parse() {
 	vector<string> tokenized;
 
@@ -44,7 +48,7 @@ void Parser::parse() {
 
 	// If parentheses don't match, return with an error message
 	if (!parenthesesMatch()) {
-		cout << "r'shell: parentheses don't match\n";
+		cout << "r'shell: mismatched parentheses\n";
 		return;
 	}
 
@@ -78,6 +82,7 @@ void Parser::parse() {
 
 	// Begin tokenizing
 	while (current < input.length()) {
+
 		// When we find a quotation mark, jump over it and...
 		if (input[current] == '"') {
 			trail = current + 1;
@@ -100,27 +105,40 @@ void Parser::parse() {
 			}
 
 		}
-
-		else if (current + 1 >= input.length()) {
-			tokenized.push_back(input.substr(trail));
-			break;		// We've reached the end of input
-		}
 		else if (input[current] == ' ') {		// If we are at a whitespace
-
 			// Push the previous word to tokenized
 			tokenized.push_back(input.substr(trail, current - trail));
 			trail = current + 1;
 		}
-		else if (input[current] == ';') {
-			if (trail < current) {		// If there is a character immediately followed by a semicolon
+		else if (input[current] == ';' || input[current] == '(' || input[current] == ')') {
+
+			// If there is a character immediately followed by a semicolon, (, or )
+			if (trail < current) {
 				tokenized.push_back(input.substr(trail, current - trail));
 				trail = current;
-			} 
-			else {		// If there's a space before semicolon
+
+				// If we are at the end of input, simply push the last ; ( )
+				if (current + 1 == input.size()) {
+					tokenized.push_back(input.substr(trail, 1));
+				}
+			}
+
+			// If a ;, (, or ) is followed by a char, push this
+			else if (current + 1 != input.size() && input[current + 1] != ' ') {
+				tokenized.push_back(input.substr(trail, 1));
+				trail++;
+			}
+
+			// If there's a space before semicolon
+			else {		
 				tokenized.push_back(input.substr(trail, 1));
 				current++;
 				trail = current + 1;
 			}
+		}
+		else if (current + 1 >= input.length()) {
+			tokenized.push_back(input.substr(trail));
+			break;		// We've reached the end of input
 		}
 
 		current++;		// We are at a character
@@ -149,62 +167,12 @@ Connector* Parser::WhichConnector(string &s) {
 	return 0;
 }
 
+// TODO:: Change name of fxn to ShuntingYard
 void Parser::MakeTree(vector<string> &tokenized) {
 	stack<Command*> tree{};		// The stack we put our connectors and executables on
 	Connector* c{0};		// Keep a reference to the last connector
 	vector<vector<char*>> cstrings(tokenized.size());
 	int index{0};
-
-
-	// string temp{};
-	// stack<string> operators{};
-	// queue<string> output{};
-	// vector<Executable*> execs{};
-
-	// for (int i = 0; i < tokenized.size(); i++) {
-	// 	string token = tokenized.at(i);
-
-	// 	// If the token is a command (not a connector)
-	// 	if (!isOperator(token)) {
-	// 		temp += token + " ";
-	// 	}
-
-	// 	else if (isOperator(token)) {
-	// 		while (!operators.empty() && token != "(") {
-
-	// 			if (!temp.empty()) {
-	// 				temp = temp.substr(0, temp.size() - 1);
-	// 			}
-
-	// 			output.push(operators.top());
-	// 			operators.pop();
-	// 		}
-
-	// 		operators.push(token);
-	// 	}
-
-	// 	else if (token == "(") {
-	// 		operators.push(token);
-	// 	}
-
-	// 	else if (token == ")") {
-	// 		while (operators.top() != "(") {
-	// 			output.push(operators.top());
-	// 			operators.pop();
-	// 			/* if the stack runs out without finding a left paren, then there are mismatched parentheses. */
-			
-	// 		}
-
-	// 		if (operators.top() == "(") {
-	// 			operators.pop();
-	// 		}
-	// 	}
-	// }
-
-	// while (!operators.empty()) {
-	// 	output.push(operators.top());
-	// 	operators.pop();
-	// }
 
 
 	for (int i = 0; i < tokenized.size(); i++) {
@@ -221,7 +189,7 @@ void Parser::MakeTree(vector<string> &tokenized) {
 		}
 
 		// If the next string is not the end, and if it's a connector -- Or if we are at the end..
-		if ((i + 1 != tokenized.size()) && isOperator(tokenized.at(i + 1)) || i + 1 == tokenized.size()) {
+		if ((i + 1 != tokenized.size()) && isOperator(tokenized.at(i + 1)) || (i + 1 == tokenized.size() && !isOperator(tokenized.at(i)))) {
 
 			// NULL terminate cstrings (execvp likes them..)
 			cstrings[index].push_back(NULL);
@@ -230,6 +198,9 @@ void Parser::MakeTree(vector<string> &tokenized) {
 			tree.emplace(new Executable(cstrings[index][0], cstrings[index].data()));
 
 			index++;
+		} else if (i + 1 == tokenized.size() && isOperator(tokenized.at(i)) && tokenized.at(i) != ";") {
+			cout << "r'shell: syntax error near unexpected token '" << tokenized.at(i) << "'\n";
+			return;
 		}
 
 		if (tree.size() >= 2) {
