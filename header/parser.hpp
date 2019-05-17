@@ -24,6 +24,7 @@ class Parser {
 	public:
 	Parser(){};
 	void getInput();
+	bool parenthesesMatch();
 	void parse();	// Takes the user input and tokenizes it by "&& || ;" delimiters
 				// Instantiates executables as needed
 				// instantiates connectors as needed
