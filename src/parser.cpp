@@ -10,6 +10,20 @@ void Parser::getInput() {
 	getline(cin, input);
 }
 
+bool Parser::parenthesesMatch() {
+	int count{0};
+
+	for (int i{0}; i < input.size(); i++) {
+		if (input[i] == '(') {
+			count++;
+		} else if (input[i] == ')') {
+			count--;
+		}
+	}
+
+	return (count == 0) ? true : false;
+}
+
 void Parser::parse() {
 	vector<string> tokenized;
 
@@ -22,24 +36,49 @@ void Parser::parse() {
 	// Trim start and trailing whitespace
 	size_t firstChar = input.find_first_not_of(' ');
 	size_t lastChar = input.find_last_not_of(' ');
-	size_t inputRange = lastChar - firstChar + 1;
 
-	// If input is just whitespace, quit.
+	// If input is just whitespace, return.
 	if (firstChar == string::npos && lastChar == string::npos) {
 		return;
 	}
 
+	// If parentheses don't match, return with an error message
+	if (!parenthesesMatch()) {
+		cout << "r'shell: parentheses don't match\n";
+		return;
+	}
+
+	size_t inputRange = lastChar - firstChar + 1;
+
 	// Only trim whitespaces if input is not empty.
 	if (!input.empty()) {
 		input = input.substr(firstChar, inputRange);
+
+		bool inQuotes = false;
+
+		// Remove subsequent whitespaces
+		for (int i = 0; i < input.size(); i++) {
+			
+			// Mark that we are/aren't in a quote. Don't want to trim whitespace inside quotes.
+			if (input[i] == '"') {
+				inQuotes = !inQuotes;
+			}
+
+			// If we aren't in quotes, check for subsequent whitespaces. Erase if any found.
+			if ((inQuotes == false) && (input[i] == ' ')) {
+				while (input[i + 1] == ' ') {
+					input.erase(input.begin() + i + 1);
+				}
+			}
+		}
 	}
 
-	unsigned current{0};
-	unsigned trail{0};
+	int current{0};
+	int trail{0};
 
 	// Begin tokenizing
 	while (current < input.length()) {
-		// When we find a quotation mark...
+		// When we find a quotation mark, jump over it and...
 		if (input[current] == '"') {
 			trail = current + 1;
 			current++;
@@ -49,10 +88,10 @@ void Parser::parse() {
 				current++;
 			}
 
-			// When second pair found, or when we reach the end of string:
+			// When second pair found, or when we reach the end of string, push everything between quotes to our vector
 			tokenized.push_back(input.substr(trail, current - trail));
 
-			// If there are more characters after the quote, jump over the space. Move trail
+			// If there are more characters after the quotes, jump over the space. Move trail
 			if (input[current + 1] == ' ') {
 				current++;
 				trail = current + 1;
@@ -66,16 +105,19 @@ void Parser::parse() {
 			tokenized.push_back(input.substr(trail));
 			break;		// We've reached the end of input
 		}
-		else if (input[current] == ' ') {
+		else if (input[current] == ' ') {		// If we are at a whitespace
+
+			// Push the previous word to tokenized
 			tokenized.push_back(input.substr(trail, current - trail));
 			trail = current + 1;
 		}
 		else if (input[current] == ';') {
-			if (trail < current) {
+			if (trail < current) {		// If there is a character immediately followed by a semicolon
 				tokenized.push_back(input.substr(trail, current - trail));
 				trail = current;
-			} else {
-				tokenized.push_back(input.substr(trail, trail + 1));
+			} 
+			else {		// If there's a space before semicolon
+				tokenized.push_back(input.substr(trail, 1));
 				current++;
 				trail = current + 1;
 			}
@@ -140,6 +182,28 @@ void Parser::MakeTree(vector<string> &tokenized) {
 
 	// 		operators.push(token);
 	// 	}
+
+	// 	else if (token == "(") {
+	// 		operators.push(token);
+	// 	}
+
+	// 	else if (token == ")") {
+	// 		while (operators.top() != "(") {
+	// 			output.push(operators.top());
+	// 			operators.pop();
+	// 			/* if the stack runs out without finding a left paren, then there are mismatched parentheses. */
+			
+	// 		}
+
+	// 		if (operators.top() == "(") {
+	// 			operators.pop();
+	// 		}
+	// 	}
+	// }
+
+	// while (!operators.empty()) {
+	// 	output.push(operators.top());
+	// 	operators.pop();
 	// }
 
 
@@ -152,7 +216,6 @@ void Parser::MakeTree(vector<string> &tokenized) {
 			c = WhichConnector(tokenized.at(i));
 		}
 		else {
-			
 			// If not a connector, push to temp
 			cstrings[index].push_back(&tokenized[i][0]);
 		}
@@ -160,9 +223,10 @@ void Parser::MakeTree(vector<string> &tokenized) {
 		// If the next string is not the end, and if it's a connector -- Or if we are at the end..
 		if ((i + 1 != tokenized.size()) && isOperator(tokenized.at(i + 1)) || i + 1 == tokenized.size()) {
 
+			// NULL terminate cstrings (execvp likes them..)
 			cstrings[index].push_back(NULL);
 
-			// Create a new executable and push onto stack
+			// Create a new executable and push it onto our stack
 			tree.emplace(new Executable(cstrings[index][0], cstrings[index].data()));
 
 			index++;
