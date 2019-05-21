@@ -196,7 +196,6 @@ void Parser::ShuntingYard(vector<string> &tokenized) {
 
 		if (isOperator(tokenized.at(i))) {
 			while (!operators.empty() && operators.top() != "(") {
-
 				output.push(operators.top());
 				operators.pop();
 			}
@@ -252,13 +251,17 @@ void Parser::MakeTree(queue<string> &output) {
 		if (isOperator(outputVector[i])) {
 			Connector* c = WhichConnector(outputVector[i]);
 
-			Command* right = s.top();
-			s.pop();
-			Command* left = s.top();
-			s.pop();
+			if (!s.empty()) {
+				Command* right = s.top();
+				c->SetRight(right);
+				s.pop();
+			}
 
-			c->SetRight(right);
-			c->SetLeft(left);
+			if (!s.empty()) {
+				Command* left = s.top();
+				c->SetLeft(left);
+				s.pop();
+			}
 
 			s.push(c);
 		}
