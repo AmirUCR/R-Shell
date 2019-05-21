@@ -1,5 +1,4 @@
 #include "../src/executable.cpp"
-
 #include "gtest/gtest.h"
 
 
@@ -7,7 +6,7 @@ TEST(ExecutableTest, ValidCommandAndArg){
     
     char * argList[] = {"ls", "-a", NULL}; 
 
-    Executable * exec = new Executable(argList[0], argList); 
+    Executable * exec = new Executable("ls", argList); 
 
     EXPECT_EQ(exec->execute(), true); 
 }
