@@ -4,8 +4,8 @@
 bool Or::execute() {
 
     // If lhs fails, execute rhs. If rhs succeeds, return true.
-    if (!lhsCMD->execute()) {
-        if (rhsCMD->execute()) {
+    if (this->lhsCMD != 0 && !this->lhsCMD->execute()) {
+        if (this->rhsCMD != 0 && this->rhsCMD->execute()) {
             return true;
         }
 

@@ -7,8 +7,8 @@ bool And::execute() {
     // We only execute the rhs command if lhs succeeds.
     // If both lhs and rhs succeed, return true.
 
-    if (this->lhsCMD->execute()) {
-        if (this->rhsCMD->execute()) {
+    if (this->lhsCMD != 0 && this->lhsCMD->execute()) {
+        if (this->rhsCMD != 0 && this->rhsCMD->execute()) {
             return true;
         }
     }

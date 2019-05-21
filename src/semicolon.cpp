@@ -5,11 +5,11 @@ bool Semicolon::execute() {
     bool lhs_flag = false;
     bool rhs_flag = false;
 
-    if (lhsCMD->execute()) {
+    if (this->lhsCMD != 0 && this->lhsCMD->execute()) {
         lhs_flag = true;
     }
 
-    if (rhsCMD->execute()) {
+    if (this->rhsCMD != 0 && this->rhsCMD->execute()) {
         rhs_flag = true;
     }
 
