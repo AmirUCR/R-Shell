@@ -15,9 +15,8 @@ class Executable: public Command {
     bool successExec;
 
     public:
-
     Executable(const char* execName, char** argList) : Command() {
-        this->execName = execName; 
+        this->execName = execName;
         this->argList = argList;
         this->successExec = true;
     }
