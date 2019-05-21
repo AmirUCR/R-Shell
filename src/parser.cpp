@@ -144,7 +144,7 @@ void Parser::parse() {
 		current++;		// We are at a character
 	}
 
-	this->MakeTree(tokenized);
+	this->ShuntingYard(tokenized);
 }
 
 bool Parser::isOperator(string &s) {
@@ -167,10 +167,10 @@ Connector* Parser::WhichConnector(string &s) {
 	return 0;
 }
 
-// TODO:: Change name of fxn to ShuntingYard
-void Parser::MakeTree(vector<string> &tokenized) {
-
-	string temp{};
+// 
+// Algorithm from: https://en.wikipedia.org/wiki/Shunting-yard_algorithm#The_algorithm_in_detail
+//
+void Parser::ShuntingYard(vector<string> &tokenized) {
 	stack<string> operators{};
 	queue<string> output{};
 
@@ -178,20 +178,15 @@ void Parser::MakeTree(vector<string> &tokenized) {
 
 		// If the token is a word (not a connector or parentheses), keep going until we find one
 		while (!isOperator(tokenized.at(i)) && tokenized.at(i) != "(" && tokenized.at(i) != ")") {
-			temp += tokenized.at(i) + " ";
+			output.push(tokenized.at(i));
 			i++;
 
-
 			if (i >= tokenized.size() || isOperator(tokenized.at(i)) || tokenized.at(i) == "(" || tokenized.at(i) == ")") {
-				temp = temp.substr(0, temp.size() - 1);
-
-				output.push(temp);
+				output.push("\0");
 
 				if (i >= tokenized.size()) {
 					break;
 				}
-
-				temp = "";
 			}
 		}
 
@@ -228,5 +223,68 @@ void Parser::MakeTree(vector<string> &tokenized) {
 	while (!operators.empty()) {
 		output.push(operators.top());
 		operators.pop();
+	}
+
+	// FOR DEBUGGING
+	// while (!output.empty()) {
+	// 	cout << output.front() << " ";
+	// 	output.pop();
+	// }
+
+	this->MakeTree(output);
+}
+
+// 
+// Algorithm to evaluate postfix. From: https://en.wikipedia.org/wiki/Reverse_Polish_notation#Postfix_evaluation_algorithm
+//
+void Parser::MakeTree(queue<string> &output) {
+	stack<Command*> s{};
+	vector<string> outputVector;
+	vector<vector<char*>> cstrings(output.size());
+	int index = 0;
+
+	while (!output.empty()) {
+		outputVector.push_back(output.front());
+		output.pop();
+	}
+
+	for (int i = 0; i < outputVector.size(); i++) {
+		if (isOperator(outputVector[i])) {
+			Connector* c = WhichConnector(outputVector[i]);
+
+			Command* right = s.top();
+			s.pop();
+			Command* left = s.top();
+			s.pop();
+
+			c->SetRight(right);
+			c->SetLeft(left);
+
+			s.push(c);
+		}
+		else {
+			while (outputVector[i] != "\0") {
+				cstrings[index].push_back(&outputVector[i][0]);
+				i++;
+			}
+
+			s.emplace(new Executable(cstrings[index][0], cstrings[index].data()));
+			
+			index++;
+		};
+	}
+
+	if (!s.empty()) {
+		s.top()->execute();
+
+		for (size_t y = 0; y < cstrings.size(); y++) {
+			for (size_t x = 0; x < cstrings[y].size(); x++) {
+				cstrings[y][x] = 0;
+			}
+		}
+
+		outputVector.clear();
+
+		s.pop();
 	}
 }
