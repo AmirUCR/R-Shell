@@ -13,7 +13,7 @@ bool Test_cmd::execute() {
             if (strcmp(this->argList[1], "-f") == 0) {
                 status = S_ISREG(buf.st_mode); 
             }
-            if(strcmp(this->argList[1], "-d") == 0) {
+            else if (strcmp(this->argList[1], "-d") == 0) {
                 status = S_ISDIR(buf.st_mode); 
             }
             else {
@@ -21,15 +21,16 @@ bool Test_cmd::execute() {
             }
 
             if (status) {
-                cout << "(True)" << endl; 
+                cout << "(True)" << endl;
                 return true; 
             }
             else {
-                cout << "(False)" << endl; 
+                cout << "(False)" << endl;
                 return false; 
             }
         }
         else {
+            cout << "(False)" << endl;
             return false; 
         }
     }
