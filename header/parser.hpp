@@ -7,7 +7,7 @@
 #include <vector>
 #include <queue>
 #include "command.hpp"
-#include "executable.h"
+#include "executable.hpp"
 #include "or.hpp"
 #include "and.hpp"
 #include "semicolon.hpp"
@@ -18,10 +18,11 @@ class Parser {
 	private:
 	string input{};	// Holds user's command line input
 
-	Connector* WhichConnector(string &);	// Return a connector object depending on which "&&" "||" or ";" string is passed in
+	Connector* WhichConnector(string);	// Return a connector object depending on which "&&" "||" or ";" string is passed in
 	bool isOperator(string &);	// True if argument is one of the "&&" "||" or ";"
-	void ShuntingYard(vector<string> &);
-	void MakeTree(queue<string> &);
+	void ShuntingYard(vector<string>);
+	void MakeTree(queue<string> );
+	void trim(string &);
 
 	public:
 	Parser(){};
