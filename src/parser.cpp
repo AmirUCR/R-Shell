@@ -4,19 +4,35 @@
 #include "semicolon.cpp"
 #include "executable.cpp"
 #include <cstring>
+#include <algorithm>
 #include <queue>
 
 void Parser::getInput() {
-	getline(cin, input);
+	string temp;
+
+	getline(cin, temp);
+	input += temp;
+
+	while (!quotesMatch()) {
+		cout << "> ";
+		input += "\n";
+		getline(cin, temp);
+		input += temp;
+	}
+
 }
 
 bool Parser::parenthesesMatch() {
-	int count{0};
+	int count = 0;
+	bool inQuotes = false;
 
-	for (int i{0}; i < input.size(); i++) {
-		if (input[i] == '(') {
+	for (int i = 0; i < input.size(); i++) {
+		if (input[i] == '"') {
+			inQuotes = !inQuotes;
+		}
+		else if (!inQuotes && input[i] == '(') {
 			count++;
-		} else if (input[i] == ')') {
+		} else if (!inQuotes && input[i] == ')') {
 			count--;
 		}
 	}
@@ -24,12 +40,57 @@ bool Parser::parenthesesMatch() {
 	return (count == 0) ? true : false;
 }
 
-void Parser::trim(string &s) {
-	
+bool Parser::quotesMatch() {
+	int singleQuotesCount = 0;
+	int doubleQuotesCount = 0;
+	int dqEvenOdd = 0;
+	int sqEvenOdd = 0;
+
+	for (int i = 0; i < input.size(); i++) {
+		if (input[i] == '"') {
+			if (input[i - 1] == '\\') {
+				continue;
+			} else {
+				singleQuotesCount++;
+			}
+		} else if (input[i] == '\'') {
+			if (input[i - 1] == '\\') {
+				continue;
+			} else {
+				doubleQuotesCount++;
+			}
+		}
+	}
+
+	dqEvenOdd = doubleQuotesCount % 2;
+	sqEvenOdd = singleQuotesCount % 2;
+
+	return (dqEvenOdd == 0 && sqEvenOdd == 0) ? true : false;
+}
+
+bool Parser::escapeChar() {
+	size_t index = input.find('\\');
+	return (index == string::npos) ? false : true;
+}
+
+void Parser::printError(string s) {
+	cout << "r'shell: " << s << endl;
 }
 
 void Parser::parse() {
 	vector<string> tokenized;
+
+	// If parentheses don't match, return with an error message
+	if (!parenthesesMatch()) {
+		printError("mismatched parentheses");
+		return;
+	}
+
+	// TODO: no support for \char escaping yet
+	if (escapeChar()) {
+		printError("character escaping is not supported");
+		return;
+	}
 
 	// Trim start and trailing whitespace
 	size_t firstChar = input.find_first_not_of(' ');
@@ -37,12 +98,6 @@ void Parser::parse() {
 
 	// If input is just whitespace, return.
 	if (firstChar == string::npos && lastChar == string::npos) {
-		return;
-	}
-
-	// If parentheses don't match, return with an error message
-	if (!parenthesesMatch()) {
-		cout << "r'shell: mismatched parentheses\n";
 		return;
 	}
 
@@ -75,20 +130,41 @@ void Parser::parse() {
 	int trail{0};
 
 	// Begin tokenizing
+	// Here be dragons...
 	while (current < input.length()) {
 
-		// When we find a quotation mark, jump over it and...
+		// When we find a quotation mark
 		if (input[current] == '"') {
-			trail = current + 1;
+			bool isAttached = true;
+			bool inQuotes = true;
+
+			if (input[current - 1] == ' ') {
+				isAttached = false;
+				trail = current + 1;
+			}
 			current++;
 
-			// ...keep looking for its second pair
-			while (current + 1 < input.length() && input[current] != '"') {
+			while (current + 1 < input.length()) {
+				if (input[current] == '"') {
+					inQuotes = !inQuotes;
+				}
+
+				else if (!inQuotes && input[current] == ' ') {
+					break;
+				}
+
 				current++;
 			}
 
-			// When second pair found, or when we reach the end of string, push everything between quotes to our vector
-			tokenized.push_back(input.substr(trail, current - trail));
+			string sub = input.substr(trail, current - trail);
+
+			if (isAttached) {
+				// find and erase all '"'
+				string::iterator end_pos = remove(sub.begin(), sub.end(), '"');
+				sub.erase(end_pos, sub.end());
+			}
+
+			tokenized.push_back(sub);
 
 			// If there are more characters after the quotes, jump over the space. Move trail
 			if (input[current + 1] == ' ') {
@@ -286,10 +362,7 @@ void Parser::MakeTree(queue<string> output) {
 				i++;
 			}
 
-			char** arr = cstrings[index].data();
-			char* name = cstrings[index][0];
-
-			s.emplace(new Executable(name, arr));
+			s.emplace(new Executable(cstrings[index][0], cstrings[index].data()));
 			
 			index++;
 		};
@@ -298,15 +371,14 @@ void Parser::MakeTree(queue<string> output) {
 	if (!s.empty()) {
 		s.top()->execute();
 
-		for (size_t y = 0; y < cstrings.size(); y++) {
-			for (size_t x = 0; x < cstrings[y].size(); x++) {
-				cstrings[y][x] = 0;
-			}
-			cstrings[y].clear();
-		}
-
-		cstrings.clear();
-		outputVector.clear();
+		// for (size_t y = 0; y < cstrings.size(); y++) {
+		// 	for (size_t x = 0; x < cstrings[y].size(); x++) {
+		// 		cstrings[y][x] = 0;
+		// 	}
+		// 	cstrings[y].clear();
+		// }
+		// cstrings.clear();
+		// outputVector.clear();
 
 		s.pop();
 	}
