@@ -24,18 +24,12 @@ bool Parser::parenthesesMatch() {
 	return (count == 0) ? true : false;
 }
 
-// void Parser::removeComments(string &s)
-
-// void Parser::trim
+void Parser::trim(string &s) {
+	
+}
 
 void Parser::parse() {
 	vector<string> tokenized;
-
-	// We erase anything after # -- Don't want to parse comments
-	size_t findComment = input.find('#');
-	if (findComment != string::npos) {
-		input.erase(findComment);
-	}
 
 	// Trim start and trailing whitespace
 	size_t firstChar = input.find_first_not_of(' ');
@@ -105,25 +99,38 @@ void Parser::parse() {
 			}
 
 		}
-		else if (input[current] == ' ') {		// If we are at a whitespace
+		// The rest of the input is discarded (except if in quotes which is handled above)
+		else if (input[current] == '#') {
+			if (trail < current) {
+				//cout << "Comments\n";
+				tokenized.push_back(input.substr(trail, current - trail));
+				break;
+			} else {
+				break;
+			}
+		}
+		// If we are at a whitespace
+		else if (input[current] == ' ') {		
 			// Push the previous word to tokenized
 			tokenized.push_back(input.substr(trail, current - trail));
 			trail = current + 1;
 		}
+		
+		// If we are at a semicolon or parentheses
 		else if (input[current] == ';' || input[current] == '(' || input[current] == ')') {
 
-			// If there is a character immediately followed by a semicolon, (, or )
+			// If there is a character immediately followed by a semicolon, '(', or ')' (e.g, echo A;)
 			if (trail < current) {
 				tokenized.push_back(input.substr(trail, current - trail));
 				trail = current;
 
-				// If we are at the end of input, simply push the last ; ( )
+				// If we are at the end of input, simply push the last ';', '(', or ')'
 				if (current + 1 == input.size()) {
 					tokenized.push_back(input.substr(trail, 1));
 				}
 			}
 
-			// If a ;, (, or ) is followed by a char, push this
+			// If a ';', '(', or ')' is followed by a char
 			else if (current + 1 != input.size() && input[current + 1] != ' ') {
 				tokenized.push_back(input.substr(trail, 1));
 				trail++;
@@ -136,13 +143,21 @@ void Parser::parse() {
 				trail = current + 1;
 			}
 		}
+
+		
+		// We've reached the end of input
 		else if (current + 1 >= input.length()) {
 			tokenized.push_back(input.substr(trail));
-			break;		// We've reached the end of input
+			break;
 		}
 
 		current++;		// We are at a character
 	}
+
+	// FOR DEBUGGING
+	// for (int i = 0; i < tokenized.size(); i++) {
+	// 	cout << "\"" << tokenized[i] << "\"" << " ";
+	// }
 
 	this->ShuntingYard(tokenized);
 }
@@ -151,7 +166,7 @@ bool Parser::isOperator(string &s) {
 	return (s == "&&" || s == ";" || s == "||") ? true : false;
 }
 
-Connector* Parser::WhichConnector(string &s) {
+Connector* Parser::WhichConnector(string s) {
 	if (s == "&&") {
 		return new And();
 	}
@@ -170,7 +185,7 @@ Connector* Parser::WhichConnector(string &s) {
 // 
 // Algorithm from: https://en.wikipedia.org/wiki/Shunting-yard_algorithm#The_algorithm_in_detail
 //
-void Parser::ShuntingYard(vector<string> &tokenized) {
+void Parser::ShuntingYard(vector<string> tokenized) {
 	stack<string> operators{};
 	queue<string> output{};
 
@@ -236,7 +251,7 @@ void Parser::ShuntingYard(vector<string> &tokenized) {
 // 
 // Algorithm to evaluate postfix. From: https://en.wikipedia.org/wiki/Reverse_Polish_notation#Postfix_evaluation_algorithm
 //
-void Parser::MakeTree(queue<string> &output) {
+void Parser::MakeTree(queue<string> output) {
 	stack<Command*> s{};
 	vector<string> outputVector;
 	vector<vector<char*>> cstrings(output.size());
@@ -271,7 +286,10 @@ void Parser::MakeTree(queue<string> &output) {
 				i++;
 			}
 
-			s.emplace(new Executable(cstrings[index][0], cstrings[index].data()));
+			char** arr = cstrings[index].data();
+			char* name = cstrings[index][0];
+
+			s.emplace(new Executable(name, arr));
 			
 			index++;
 		};
@@ -284,8 +302,10 @@ void Parser::MakeTree(queue<string> &output) {
 			for (size_t x = 0; x < cstrings[y].size(); x++) {
 				cstrings[y][x] = 0;
 			}
+			cstrings[y].clear();
 		}
 
+		cstrings.clear();
 		outputVector.clear();
 
 		s.pop();
