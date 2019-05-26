@@ -83,12 +83,14 @@ void Parser::parse() {
 	// If parentheses don't match, return with an error message
 	if (!parenthesesMatch()) {
 		printError("mismatched parentheses");
+		input.clear();
 		return;
 	}
 
 	// TODO: no support for \char escaping yet
 	if (escapeChar()) {
 		printError("character escaping is not supported");
+		input.clear();
 		return;
 	}
 
@@ -379,6 +381,7 @@ void Parser::MakeTree(queue<string> output) {
 		// }
 		// cstrings.clear();
 		// outputVector.clear();
+		input.clear();
 
 		s.pop();
 	}
