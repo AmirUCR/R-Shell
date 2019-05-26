@@ -40,6 +40,12 @@ TEST(TestClass, dFlagFile){
     EXPECT_EQ(t->execute(), false); 
 }
 
+TEST(TestClass, dFlagFolder){
+    char * args[] = {"test", "-d", "header/", NULL}; 
+    Executable* t = new Executable("test", args); 
+    EXPECT_EQ(t->execute(), true); 
+}
+
 
 TEST(TestClass, noFlagDirectory){
     char * args[] = {"test", "unit_tests", NULL}; 
