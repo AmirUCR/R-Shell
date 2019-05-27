@@ -22,7 +22,6 @@ class Parser {
 	bool isOperator(string &);	// True if argument is one of the "&&" "||" or ";"
 	void ShuntingYard(vector<string>);
 	void MakeTree(queue<string> );
-	// void trim();		// Unused at the moment
 	bool escapeChar();
 	bool parenthesesMatch();	// returns true if there is a same number of left "(" and right ")" parentheses in input
 	bool quotesMatch();
