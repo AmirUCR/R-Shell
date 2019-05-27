@@ -69,6 +69,18 @@ The user input is taken by the Parser and each word is tokenized and stored in a
 * Overrides execute
   * This function, depending on the cmd passed in, will call execvp's execute or test_cmd's execute and will return true or false depending on what either function calls return.
 
+**Class Test_cmd**
+* Takes in the execname and an array of character type arguments 
+
+* Overrides execute
+  * This function will use the stat() function that will return information about a file/directory passed in. The function will also consider the flag passed in (-f, -d, -e, or no flag) and will return and output true or false depending on whether the flag passed in matches the actual state of the file/directory. i
+
+**Class Execvp**
+* Takes in the execname and an array of charcter type arguments. 
+
+* Overrides execute
+  * This function will use syscalls fork(), execvp(), and waitpid(), to create child processes in which certain commmands can be executed. It will return true if the command passes and false if the command fails. 
+
 
 **Class Parser**
 * Has references to the abstract base Command classes (Connector, Executable) in order to instantiate such objects.
