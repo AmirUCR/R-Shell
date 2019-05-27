@@ -1,19 +1,19 @@
 #include "../header/semicolon.hpp"
 
-// The Seimicolon executes both lhs and rhs
+// The Semicolon executes both lhs and rhs
 bool Semicolon::execute() {
     bool lhs_flag = false;
     bool rhs_flag = false;
 
-    if (lhsCMD->execute()) {
+    if (this->lhsCMD != 0 && this->lhsCMD->execute()) {
         lhs_flag = true;
     }
 
-    if (rhsCMD->execute()) {
+    if (this->rhsCMD != 0 && this->rhsCMD->execute()) {
         rhs_flag = true;
     }
 
-    // If both lhs and rhs did not succeed (false), then return false.
+    // If neither lhs or rhs succeeded (both were false), then return false.
     if (lhs_flag || rhs_flag) {
         return true;
     } else {

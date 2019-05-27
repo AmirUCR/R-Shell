@@ -1,36 +1,30 @@
-#include "../header/executable.h" 
-#include <stdio.h>
-#include <sys/types.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <sys/wait.h>
+#include "test_cmd.cpp"
+#include "execvp.cpp"
+#include <cstring>
+#include <algorithm>
+#include "../header/executable.hpp"
 
 using namespace std;
 
 bool Executable::execute() {
+    bool successFail = false;
 
-    int status; 
-    pid_t pid = fork(); 
+    // if execName == test, instantiate test -- return test.execute
+    if (strcmp(this->execName, "test") == 0) {
+        Test_cmd* t = new Test_cmd(execName, argList);
+        successFail = t->execute();
     
-    if (execName == "exit") {
-        exit(0); 
-    }
+        delete t;
+        t = 0;
 
-    if (pid < 0) {
-        perror("Failure to fork");
-    }
- 
-    if (pid == 0) {
-        execvp(this->execName, this->argList);
-        exit(1); 
-    }
+        return successFail;
+    } else {
+        Execvp* e = new Execvp(execName, argList);
+        successFail = e->execute();
 
-    else {
-      waitpid(pid, &status, 0); 
-      if (status == 0) {
-          return true; 
-      }
-       return false;  
+        delete e;
+        e = 0;
+
+        return successFail;
     }
 }
-

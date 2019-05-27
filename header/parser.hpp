@@ -5,8 +5,9 @@
 #include <iostream>
 #include <stack>
 #include <vector>
+#include <queue>
 #include "command.hpp"
-#include "executable.h"
+#include "executable.hpp"
 #include "or.hpp"
 #include "and.hpp"
 #include "semicolon.hpp"
@@ -16,17 +17,20 @@ using namespace std;
 class Parser {
 	private:
 	string input{};	// Holds user's command line input
-	//stack<Command*> commands{};
 
-	Connector* WhichConnector(string &s);
-	bool isOperator(string &s);
-	void MakeTree(vector<string> &);
-	void Parse();	// Takes the user input and tokenizes it by "&& || ;" delimiters
-					// Instantiates executables as needed
-					// instantiates connectors as needed
+	Connector* WhichConnector(string);	// Return a connector object depending on which "&&" "||" or ";" string is passed in
+	bool isOperator(string &);	// True if argument is one of the "&&" "||" or ";"
+	void ShuntingYard(vector<string>);
+	void MakeTree(queue<string> );
+	bool escapeChar();
+	bool parenthesesMatch();	// returns true if there is a same number of left "(" and right ")" parentheses in input
+	bool quotesMatch();
+	void printError(string);
 
 	public:
-	Parser();		// Get user input and store it	
+	Parser(){};
+	void getInput();			// getline user input
+	void parse();				// Takes the user input and tokenizes it by "&& || ;" delimiters
 };
 
 #endif // END PARSER_H

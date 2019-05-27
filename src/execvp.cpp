@@ -1,0 +1,38 @@
+#include "../header/execvp.hpp" 
+#include <stdio.h>
+#include <sys/types.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <sys/wait.h>
+#include <cstring>
+
+using namespace std;
+
+bool Execvp::execute() {
+
+    int status; 
+    pid_t pid = fork(); 
+    
+    if (strcmp(this->execName, "exit") == 0) {
+        exit(0); 
+    }
+
+    if (pid < 0) {
+        perror("Failure to fork");
+    }
+ 
+    if (pid == 0) {
+        execvp(this->execName, this->argList);
+        exit(1); 
+    }
+
+    else {
+        waitpid(pid, &status, 0);
+        
+      if (status == 0) {
+          return true; 
+      }
+       return false;  
+    }
+}
+

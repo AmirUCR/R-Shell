@@ -1,26 +1,44 @@
 $ hi
 .
 ..
+commented_command_tests_output.txt
 commented_command_tests.sh
+exit_command_tests_output.txt
 exit_command_tests.sh
-input.txt
 multiple_commands_tests.sh
 multiple_command_tests_output.txt
+precedence_tests_output.txt
+precedence_tests.sh
+single_command_tests_output.txt
 single_command_tests.sh
+test_literal_tests.sh
+test_symbolic_tests.sh
 bye
-On branch AmirUCR
-Your branch is ahead of 'origin/AmirUCR' by 13 commits.
+On branch amirucr/comment-fix
+Your branch is ahead of 'origin/amirucr/comment-fix' by 4 commits.
   (use "git push" to publish your local commits)
 
 Changes not staged for commit:
   (use "git add <file>..." to update what will be committed)
   (use "git checkout -- <file>..." to discard changes in working directory)
+  (commit or discard the untracked or modified content in submodules)
 
+	modified:   ../googletest (untracked content)
+	modified:   commented_command_tests.sh
+	modified:   exit_command_tests.sh
+	modified:   multiple_command_tests_output.txt
 	modified:   multiple_commands_tests.sh
+	modified:   single_command_tests.sh
+	modified:   ../src/parser.cpp
 
 Untracked files:
   (use "git add <file>..." to include in what will be committed)
 
-	input.txt
+	../header/new folder/
+	precedence_tests.sh
+	precedence_tests_output.txt
+	test_literal_tests.sh
+	test_symbolic_tests.sh
+	../src/main
 
 no changes added to commit (use "git add" and/or "git commit -a")

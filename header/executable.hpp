@@ -1,28 +1,22 @@
-#ifndef EXECUTABLE_H
-#define EXECUTABLE_H
+#ifndef EXECUTABLE_HPP
+#define EXECUTABLE_HPP
 
 #include "command.hpp"
-#include <string>
-
-using namespace std; 
 
 class Executable: public Command {
-
-    private: 
-    
+    protected: 
     char** argList;
     const char* execName; 
     bool successExec;
 
     public:
-
     Executable(const char* execName, char** argList) : Command() {
-        this->execName = execName; 
+        this->execName = execName;
         this->argList = argList;
         this->successExec = true;
     }
 
-    bool execute();
+    virtual bool execute();
 }; 
 
 #endif

@@ -1,0 +1,5 @@
+# This is a sample file inside a folder inside another folder to evaluate
+# the test command
+# Ignore everything except this file
+*
+!.gitignore
