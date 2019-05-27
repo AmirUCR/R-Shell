@@ -144,12 +144,11 @@ void Parser::parse() {
 		}
 
 		else if (input[current] == ']') {
-			current++;
+			trail++;
 			if (input[current] == ' ') {
 				current++;
+				trail = current + 1;
 			}
-
-			trail = current + 1;
 		}
 
 		// When we find a quotation mark
@@ -168,7 +167,7 @@ void Parser::parse() {
 					inQuotes = !inQuotes;
 				}
 
-				else if (!inQuotes && input[current] == ' ') {
+				if (!inQuotes && input[current + 1] == ' ' || input[current + 1] == ';') {
 					break;
 				}
 
@@ -381,8 +380,6 @@ void Parser::MakeTree(queue<string> output) {
 				cstrings[index].push_back(&outputVector[i][0]);
 				i++;
 			}
-
-			cstrings[index].push_back(&outputVector[i][0]);
 
 			s.emplace(new Executable(cstrings[index][0], cstrings[index].data()));
 			
