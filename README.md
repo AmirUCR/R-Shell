@@ -73,13 +73,13 @@ The user input is taken by the Parser and each word is tokenized and stored in a
 * Takes in the execname and an array of character type arguments 
 
 * Overrides execute
-  * This function will use the stat() function that will return information about a file/directory passed in. The function will also consider the flag passed in (-f, -d, -e, or no flag) and will return and output true or false depending on whether the flag passed in matches the actual state of the file/directory. i
+  * This function will use the stat() function that will return information about a file/directory passed in. The function will also consider the flag passed in (-f, -d, -e, or no flag) and will return and output true or false depending on whether the flag passed in matches the actual state of the file/directory.
 
 **Class Execvp**
 * Takes in the execname and an array of charcter type arguments. 
 
 * Overrides execute
-  * This function will use syscalls fork(), execvp(), and waitpid(), to create child processes in which certain commmands can be executed. It will return true if the command passes and false if the command fails. 
+  * This function will use syscalls fork(), execvp(), and waitpid(), to create child processes in which certain commands can be executed. It will return true if the command passes and false if the command fails. 
 
 
 **Class Parser**
@@ -247,6 +247,11 @@ waitpid(-1, &status, 0);
      1. Expect the rhs to run even if lhs fails
 1. Test execute by passing in two invalid Command type objects and expect False
 
+### Test_cmd
+1. Test all the flags when a file is passed in.
+1. Test all the flags when a directory is passed in.
+1. Test when no flag is passed in with directory and file. 
+1. Test when no file or directory are passed in.  
 
 ### [Integration Test](https://github.com/cs100/spring-2019-assignment-cs100-dance-team/issues/15)
 1. Using the Parser, enter executable names, arguments, and connectors
