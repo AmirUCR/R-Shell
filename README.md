@@ -22,6 +22,26 @@ Where you can pass in any number of commands separated by any of ||, &&, or ; wh
 
 The executable can be any program that is located at one of the PATH environment variable locations. Moreover, the [argumentList] is simply a list of zero or more arguments separated by spaces.
 
+RShell supports precedence operators (i.e, left paren "(" and right paren ")"). For example, the following code
+`echo Hello! && echo Bonjour! || echo Aloha! && echo Ciao!`
+would produce the following results:
+```
+Hello!
+Bonjour!
+Ciao!
+```
+Using parentheses, we can write 
+```
+(echo Hello! && echo Bonjour!) || (echo Aloha! && echo Ciao!)
+```
+Which would produce:
+```
+Hello!
+Bonjour!
+```
+
+Moreover, with RShell, you can type in `echo "hello` and the program prompts you to continue your input until you input a second quotation mark (I'm ~~quote~~ quite proud of this one. -Amir).
+
 The design pattern we use for this program is the **Composite Pattern**. This is because a base class exists from which two other classes inherit from. Furthermore, each Connector object can contain other Connectors, or other Exectuables. The Connector abstract class is out composite, while the Executable is the leaf.
 
 # How it Works
