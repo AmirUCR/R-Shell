@@ -22,10 +22,9 @@ Where you can pass in any number of commands separated by any of ||, &&, or ; wh
 
 The executable can be any program that is located at one of the PATH environment variable locations. Moreover, the [argumentList] is simply a list of zero or more arguments separated by spaces.
 
-The design pattern we use for this program is the **Composite Pattern**. This is because a base class exists from which two other classes inherit from. Furthermore, each Connector object can contain other Connectors, or other Exectuables. The Connector abstract class is out composite, while the Executable is the leaf.
-
+The design pattern we use for this program is the **Composite Pattern**. This is because a base class exists from which two other classes inherit from. Furthermore, each Connector object can contain other Connectors, or other Exectuables. The Connector abstract class is our composite, while the Executable is the base class that serves as the interface for the execvp and test_cmd subclasses. 
 # How it Works
-The user input is taken by the Parser and each word is tokenized and stored in a vector. All strings before a connector is transformed into an Exectuable object. This Exectuable is then pushed onto a stack. If there are >= 2 Commands on the stack, we take the last connector, and assign to it a left and a right Command child (this child can be another Connector, or an Exectuable). From there, each connector will make a call to the execute function of its lhs and rhs children and, depending on the success or failure of these children, the connector will make its own execute function return true or false. Each Executable object uses execvp, syscall forks, and waitpid to carry out its job.
+The user input is taken by the Parser and each word is tokenized and stored in a vector. All strings before a connector is transformed into an Exectuable object. This Exectuable is then pushed onto a stack. If there are >= 2 Commands on the stack, we take the last connector, and assign to it a left and a right Command child (this child can be another Connector, or an Exectuable). From there, each connector will make a call to the execute function of its lhs and rhs children and, depending on the success or failure of these children, the connector will make its own execute function return true or false. Each Executable object will call one of the subclasses(execvp or test_cmd) to carry out the work depending on what command name is passed in. 
 
 # Diagram
 ![UML Diagram for RShell](https://github.com/cs100/spring-2019-assignment-cs100-dance-team/blob/master/images/UMLDiagram.png)
@@ -68,7 +67,7 @@ The user input is taken by the Parser and each word is tokenized and stored in a
 * Takes in an executable name as well as an array of character type arguments.
 
 * Overrides execute
-  * This function performs the appropriate syscall, execvp, and waitpid operations to run the given executable name and returns true if the execution succeeds. If the execName argument is exit, it does not make a syscall. We early abandon by shutting down the shell.
+  * This function, depending on the cmd passed in, will call execvp's execute or test_cmd's execute and will return true or false depending on what either function calls return.
 
 
 **Class Parser**
