@@ -22,7 +22,28 @@ Where you can pass in any number of commands separated by any of ||, &&, or ; wh
 
 The executable can be any program that is located at one of the PATH environment variable locations. Moreover, the [argumentList] is simply a list of zero or more arguments separated by spaces.
 
+RShell supports precedence operators (i.e, left paren "(" and right paren ")"). For example, the following code
+`echo Hello! && echo Bonjour! || echo Aloha! && echo Ciao!`
+would produce the following results:
+```
+Hello!
+Bonjour!
+Ciao!
+```
+Using parentheses, we can write 
+```
+(echo Hello! && echo Bonjour!) || (echo Aloha! && echo Ciao!)
+```
+Which would produce:
+```
+Hello!
+Bonjour!
+```
+
+Moreover, with RShell, you can type in `echo "hello` and the program prompts you to continue your input until you input a second quotation mark (I'm ~~quote~~ quite proud of this one. -Amir).
+
 The design pattern we use for this program is the **Composite Pattern**. This is because a base class exists from which two other classes inherit from. Furthermore, each Connector object can contain other Connectors, or other Exectuables. The Connector abstract class is our composite, while the Executable is the base class that serves as the interface for the execvp and test_cmd subclasses. 
+
 # How it Works
 The user input is taken by the Parser and each word is tokenized and stored in a vector. All strings before a connector is transformed into an Exectuable object. This Exectuable is then pushed onto a stack. If there are >= 2 Commands on the stack, we take the last connector, and assign to it a left and a right Command child (this child can be another Connector, or an Exectuable). From there, each connector will make a call to the execute function of its lhs and rhs children and, depending on the success or failure of these children, the connector will make its own execute function return true or false. Each Executable object will call one of the subclasses(execvp or test_cmd) to carry out the work depending on what command name is passed in. 
 
@@ -62,12 +83,9 @@ The user input is taken by the Parser and each word is tokenized and stored in a
 * Overrides execute
   * The execute function takes lhs and rhs Command pointer types and instantiates new Command objects, returning true if either rhsEval or lhsEval is true. 
 
-
 **Class Executable**
 * Takes in an executable name as well as an array of character type arguments.
-
-* Overrides execute
-  * This function, depending on the cmd passed in, will call execvp's execute or test_cmd's execute and will return true or false depending on what either function calls return.
+* Instantiates a new Execvp, or Test_cmd, based on the name argument given. If `test` was given, instantiates a Test_cmd object and passes the argument list. Otherwise, instantiates an Execvp.
 
 **Class Test_cmd**
 * Takes in the execname and an array of character type arguments 
@@ -80,7 +98,6 @@ The user input is taken by the Parser and each word is tokenized and stored in a
 
 * Overrides execute
   * This function will use syscalls fork(), execvp(), and waitpid(), to create child processes in which certain commands can be executed. It will return true if the command passes and false if the command fails. 
-
 
 **Class Parser**
 * Has references to the abstract base Command classes (Connector, Executable) in order to instantiate such objects.
