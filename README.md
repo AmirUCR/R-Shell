@@ -22,30 +22,9 @@ Where you can pass in any number of commands separated by any of ||, &&, or ; wh
 
 The executable can be any program that is located at one of the PATH environment variable locations. Moreover, the [argumentList] is simply a list of zero or more arguments separated by spaces.
 
-RShell supports precedence operators (i.e, left paren "(" and right paren ")"). For example, the following code
-`echo Hello! && echo Bonjour! || echo Aloha! && echo Ciao!`
-would produce the following results:
-```
-Hello!
-Bonjour!
-Ciao!
-```
-Using parentheses, we can write 
-```
-(echo Hello! && echo Bonjour!) || (echo Aloha! && echo Ciao!)
-```
-Which would produce:
-```
-Hello!
-Bonjour!
-```
-
-Moreover, with RShell, you can type in `echo "hello` and the program prompts you to continue your input until you input a second quotation mark (I'm ~~quote~~ quite proud of this one. -Amir).
-
-The design pattern we use for this program is the **Composite Pattern**. This is because a base class exists from which two other classes inherit from. Furthermore, each Connector object can contain other Connectors, or other Exectuables. The Connector abstract class is out composite, while the Executable is the leaf.
-
+The design pattern we use for this program is the **Composite Pattern**. This is because a base class exists from which two other classes inherit from. Furthermore, each Connector object can contain other Connectors, or other Exectuables. The Connector abstract class is our composite, while the Executable is the base class that serves as the interface for the execvp and test_cmd subclasses. 
 # How it Works
-The user input is taken by the Parser and each word is tokenized and stored in a vector. All strings before a connector is transformed into an Exectuable object. This Exectuable is then pushed onto a stack. If there are >= 2 Commands on the stack, we take the last connector, and assign to it a left and a right Command child (this child can be another Connector, or an Exectuable). From there, each connector will make a call to the execute function of its lhs and rhs children and, depending on the success or failure of these children, the connector will make its own execute function return true or false. Each Executable object uses execvp, syscall forks, and waitpid to carry out its job.
+The user input is taken by the Parser and each word is tokenized and stored in a vector. All strings before a connector is transformed into an Exectuable object. This Exectuable is then pushed onto a stack. If there are >= 2 Commands on the stack, we take the last connector, and assign to it a left and a right Command child (this child can be another Connector, or an Exectuable). From there, each connector will make a call to the execute function of its lhs and rhs children and, depending on the success or failure of these children, the connector will make its own execute function return true or false. Each Executable object will call one of the subclasses(execvp or test_cmd) to carry out the work depending on what command name is passed in. 
 
 # Diagram
 ![UML Diagram for RShell](https://github.com/cs100/spring-2019-assignment-cs100-dance-team/blob/master/images/UMLDiagram.png)
@@ -88,7 +67,19 @@ The user input is taken by the Parser and each word is tokenized and stored in a
 * Takes in an executable name as well as an array of character type arguments.
 
 * Overrides execute
-  * This function performs the appropriate syscall, execvp, and waitpid operations to run the given executable name and returns true if the execution succeeds. If the execName argument is exit, it does not make a syscall. We early abandon by shutting down the shell.
+  * This function, depending on the cmd passed in, will call execvp's execute or test_cmd's execute and will return true or false depending on what either function calls return.
+
+**Class Test_cmd**
+* Takes in the execname and an array of character type arguments 
+
+* Overrides execute
+  * This function will use the stat() function that will return information about a file/directory passed in. The function will also consider the flag passed in (-f, -d, -e, or no flag) and will return and output true or false depending on whether the flag passed in matches the actual state of the file/directory.
+
+**Class Execvp**
+* Takes in the execname and an array of charcter type arguments. 
+
+* Overrides execute
+  * This function will use syscalls fork(), execvp(), and waitpid(), to create child processes in which certain commands can be executed. It will return true if the command passes and false if the command fails. 
 
 
 **Class Parser**
@@ -256,6 +247,11 @@ waitpid(-1, &status, 0);
      1. Expect the rhs to run even if lhs fails
 1. Test execute by passing in two invalid Command type objects and expect False
 
+### Test_cmd
+1. Test all the flags when a file is passed in.
+1. Test all the flags when a directory is passed in.
+1. Test when no flag is passed in with directory and file. 
+1. Test when no file or directory are passed in.  
 
 ### [Integration Test](https://github.com/cs100/spring-2019-assignment-cs100-dance-team/issues/15)
 1. Using the Parser, enter executable names, arguments, and connectors
