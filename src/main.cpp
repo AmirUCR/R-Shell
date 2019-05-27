@@ -14,5 +14,10 @@ int main() {
         parser->parse();
     }
 
+    delete parser;
+    parser = 0;
+
     return 0;
 }
+
+// test -d ./header/"new folder" && echo hi
