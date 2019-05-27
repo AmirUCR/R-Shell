@@ -133,10 +133,27 @@ void Parser::parse() {
 
 	// Begin tokenizing
 	// Here be dragons...
-	while (current < input.length()) {
+	while (current < input.size()) {
+
+		if (input[current] == '[') {
+			tokenized.push_back("test");
+			if (current + 1 < input.size() && input[current + 1] == ' ') {
+				current++;
+				trail = current + 1;
+			}
+		}
+
+		else if (input[current] == ']') {
+			current++;
+			if (input[current] == ' ') {
+				current++;
+			}
+
+			trail = current + 1;
+		}
 
 		// When we find a quotation mark
-		if (input[current] == '"') {
+		else if (input[current] == '"') {
 			bool isAttached = true;
 			bool inQuotes = true;
 
@@ -327,7 +344,8 @@ void Parser::ShuntingYard(vector<string> tokenized) {
 }
 
 // 
-// Algorithm to evaluate postfix. From: https://en.wikipedia.org/wiki/Reverse_Polish_notation#Postfix_evaluation_algorithm
+// Algorithm to evaluate postfix.
+// From: https://en.wikipedia.org/wiki/Reverse_Polish_notation#Postfix_evaluation_algorithm
 //
 void Parser::MakeTree(queue<string> output) {
 	stack<Command*> s{};
@@ -364,6 +382,8 @@ void Parser::MakeTree(queue<string> output) {
 				i++;
 			}
 
+			cstrings[index].push_back(&outputVector[i][0]);
+
 			s.emplace(new Executable(cstrings[index][0], cstrings[index].data()));
 			
 			index++;
@@ -373,14 +393,14 @@ void Parser::MakeTree(queue<string> output) {
 	if (!s.empty()) {
 		s.top()->execute();
 
-		// for (size_t y = 0; y < cstrings.size(); y++) {
-		// 	for (size_t x = 0; x < cstrings[y].size(); x++) {
-		// 		cstrings[y][x] = 0;
-		// 	}
-		// 	cstrings[y].clear();
-		// }
-		// cstrings.clear();
-		// outputVector.clear();
+		for (size_t y = 0; y < cstrings.size(); y++) {
+			for (size_t x = 0; x < cstrings[y].size(); x++) {
+				cstrings[y][x] = 0;
+			}
+			cstrings[y].clear();
+		}
+		cstrings.clear();
+		outputVector.clear();
 		input.clear();
 
 		s.pop();
