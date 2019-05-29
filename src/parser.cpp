@@ -350,6 +350,7 @@ void Parser::MakeTree(queue<string> output) {
 	stack<Command*> s{};
 	vector<string> outputVector;
 	vector<char*> v;
+	vector<vector<char*>> vv;
 	size_t index = 0;
 
 	while (!output.empty()) {
@@ -382,15 +383,19 @@ void Parser::MakeTree(queue<string> output) {
 			}
 
 			v.push_back((char*)NULL);
+			vv.push_back(v);
 
-			s.emplace(new Executable(v[index], &v[index]));
-
-			index = i + 1;
+			s.emplace(new Executable(vv[index][0], &vv[index][0]));
+			
+			v.clear();
+			index++;
 		}
 	}
 
 	if (!s.empty()) {
 		s.top()->execute();
+
+		input.clear();
 
 		s.pop();
 	}
