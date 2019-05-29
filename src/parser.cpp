@@ -349,8 +349,8 @@ void Parser::ShuntingYard(vector<string> tokenized) {
 void Parser::MakeTree(queue<string> output) {
 	stack<Command*> s{};
 	vector<string> outputVector;
-	vector<vector<char*>> cstrings(output.size());
-	int index = 0;
+	vector<char*> v;
+	size_t index = 0;
 
 	while (!output.empty()) {
 		outputVector.push_back(output.front());
@@ -376,29 +376,21 @@ void Parser::MakeTree(queue<string> output) {
 			s.push(c);
 		}
 		else {
-			while (outputVector[i] != "\0") {
-				cstrings[index].push_back(&outputVector[i][0]);
+			while(outputVector[i] != "\0") {
+				v.push_back(const_cast<char*>(outputVector[i].data()));
 				i++;
 			}
 
-			s.emplace(new Executable(cstrings[index][0], cstrings[index].data()));
-			
-			index++;
-		};
+			v.push_back((char*)NULL);
+
+			s.emplace(new Executable(v[index], &v[index]));
+
+			index = i + 1;
+		}
 	}
 
 	if (!s.empty()) {
 		s.top()->execute();
-
-		for (size_t y = 0; y < cstrings.size(); y++) {
-			for (size_t x = 0; x < cstrings[y].size(); x++) {
-				cstrings[y][x] = 0;
-			}
-			cstrings[y].clear();
-		}
-		cstrings.clear();
-		outputVector.clear();
-		input.clear();
 
 		s.pop();
 	}
