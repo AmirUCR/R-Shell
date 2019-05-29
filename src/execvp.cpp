@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <sys/wait.h>
 #include <cstring>
+#include <iostream>
 
 using namespace std;
 
@@ -29,10 +30,12 @@ bool Execvp::execute() {
     else {
         waitpid(pid, &status, 0);
         
-      if (status == 0) {
-          return true; 
-      }
-       return false;  
+        if (status == 0) {
+            return true; 
+        }
+
+        cout << execName << ": command not found\n";
+        return false;  
     }
 }
 
