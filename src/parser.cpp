@@ -167,7 +167,10 @@ void Parser::parse() {
 					inQuotes = !inQuotes;
 				}
 
-				if (!inQuotes && input[current + 1] == ' ' || input[current + 1] == ';') {
+				// If we're no longer between quotation marks, check if next char is space or ;.
+				// We break because a space or a semicolon means that whatever comes next is
+				// unrelated to the current input in quotation marks.
+				if ((inQuotes == false) && (input[current + 1] == ' ' || input[current + 1] == ';')) {
 					break;
 				}
 
