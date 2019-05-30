@@ -9,7 +9,7 @@
 
 class Test_cmd : public Executable {
     public: 
-    Test_cmd(const char* execName, char** argList) : Executable(execName, argList) {}
+    Test_cmd(const char* execName, char** argList, int argListSize) : Executable(execName, argList, argListSize) {}
 
     bool execute();
 };

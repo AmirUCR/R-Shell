@@ -25,6 +25,7 @@ class Parser {
 	bool escapeChar();
 	bool parenthesesMatch();	// returns true if there is a same number of left "(" and right ")" parentheses in input
 	bool quotesMatch();
+	int bracketsMatch();
 	void printError(string);
 
 	public:

@@ -40,6 +40,30 @@ bool Parser::parenthesesMatch() {
 	return (count == 0) ? true : false;
 }
 
+int Parser::bracketsMatch() {
+	int count = 0;
+	bool inQuotes = false;
+
+	for (int i = 0; i < input.size(); i++) {
+		if (input[i] == '"') {
+			inQuotes = !inQuotes;
+		}
+		else if (!inQuotes && input[i] == '[') {
+			count++;
+		} else if (!inQuotes && input[i] == ']') {
+			count--;
+		}
+	}
+
+	if (count == 0) {
+		return 0;
+	} else if (count < 0) {
+		return -1;
+	} else {
+		return 1;
+	}
+}
+
 bool Parser::quotesMatch() {
 	int singleQuotesCount = 0;
 	int doubleQuotesCount = 0;
@@ -83,6 +107,17 @@ void Parser::parse() {
 	// If parentheses don't match, return with an error message
 	if (!parenthesesMatch()) {
 		printError("mismatched parentheses");
+		input.clear();
+		return;
+	}
+
+	// If brackets don't match, return with an error message
+	if (bracketsMatch() < 0) {
+		printError("]: missing `['");
+		input.clear();
+		return;
+	} else if (bracketsMatch() > 0) {
+		printError("[: missing `]'");
 		input.clear();
 		return;
 	}
@@ -354,7 +389,8 @@ void Parser::MakeTree(queue<string> output) {
 	vector<string> outputVector;
 	vector<char*> v;
 	vector<vector<char*>> vv;
-	size_t index = 0;
+	int argListSize = 0;
+	int index = 0;
 
 	while (!output.empty()) {
 		outputVector.push_back(output.front());
@@ -382,15 +418,17 @@ void Parser::MakeTree(queue<string> output) {
 		else {
 			while(outputVector[i] != "\0") {
 				v.push_back(const_cast<char*>(outputVector[i].data()));
+				argListSize++;
 				i++;
 			}
 
 			v.push_back((char*)NULL);
 			vv.push_back(v);
 
-			s.emplace(new Executable(vv[index][0], &vv[index][0]));
+			s.emplace(new Executable(vv[index][0], &vv[index][0], argListSize + 1));
 			
 			v.clear();
+			argListSize = 0;
 			index++;
 		}
 	}
