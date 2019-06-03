@@ -5,7 +5,7 @@
 //------------------------------------------------START OF TEST_CMD TESTS-----------------------------------------------
 
 TEST(TestClass, noFlagFile){
-    char * args[] = {"test", "unit_tests/unit_test1.cpp", NULL}; 
+    char * args[] = {(char *)"test", (char *)"unit_tests/unit_test1.cpp", (char *)NULL}; 
     Executable* t = new Executable("test", args, 3); 
     EXPECT_EQ(t->execute(), true); 
     
@@ -13,7 +13,7 @@ TEST(TestClass, noFlagFile){
 
 
 TEST(TestClass, eFlagFile){
-    char * args[] = {"test", "-e", "unit_tests/unit_test1.cpp", NULL}; 
+    char * args[] = {(char *)"test", (char *)"-e", (char *)"unit_tests/unit_test1.cpp", (char *)NULL}; 
     Executable* t = new Executable("test", args, 4); 
     EXPECT_EQ(t->execute(), true); 
 
@@ -21,55 +21,55 @@ TEST(TestClass, eFlagFile){
 
 
 TEST(TestClass, eFlagblah){
-    char * args[] = {"test", "-e", "yooooo", NULL}; 
+    char * args[] = {(char *)"test", (char *)"-e", (char *)"yooooo", (char *)NULL}; 
     Executable* t = new Executable("test", args, 3); 
     EXPECT_EQ(t->execute(), false); 
 
 }
 
 TEST(TestClass, fFlagFile){
-    char * args[] = {"test", "-f", "unit_tests/unit_test1.cpp", NULL}; 
+    char * args[] = {(char *)"test", (char *)"-f", (char *)"unit_tests/unit_test1.cpp", (char *)NULL}; 
     Executable* t = new Executable("test", args, 4); 
     EXPECT_EQ(t->execute(), true);
     
 }
 
 TEST(TestClass, dFlagFile){
-    char * args[] = {"test", "-d", "unit_tests/unit_test1.cpp", NULL}; 
+    char * args[] = {(char *)"test", (char *)"-d", (char *)"unit_tests/unit_test1.cpp", (char *)NULL}; 
     Executable* t = new Executable("test", args, 4); 
     EXPECT_EQ(t->execute(), false); 
 }
 
 TEST(TestClass, dFlagFolder){
-    char * args[] = {"test", "-d", "header/", NULL}; 
+    char * args[] = {(char *)"test", (char *)"-d", (char *)"header/", (char *)NULL}; 
     Executable* t = new Executable("test", args, 4); 
     EXPECT_EQ(t->execute(), true); 
 }
 
 
 TEST(TestClass, noFlagDirectory){
-    char * args[] = {"test", "unit_tests", NULL}; 
+    char * args[] = {(char *)"test", (char *)"unit_tests", (char *)NULL}; 
     Executable* t = new Executable("test", args, 3); 
     EXPECT_EQ(t->execute(), true); 
 }
 
 
 TEST(TestClass, eFlagDirectory){
-    char * args[] = {"test", "-e", "unit_tests", NULL}; 
+    char * args[] = {(char *)"test", (char *)"-e", (char *)"unit_tests", (char *)NULL}; 
     Executable* t = new Executable("test", args, 4); 
     EXPECT_EQ(t->execute(), true); 
 
 }
 
 TEST(TestClass, fFlagDirectory){
-    char * args[] = {"test", "-f", "~/cs100/assns/spring-2019-assignment-cs100-dance-team/unit_tests", NULL}; 
+    char * args[] = {(char *)"test", (char *)"-f", (char *)"~/cs100/assns/spring-2019-assignment-cs100-dance-team/unit_tests", (char *)NULL}; 
     Executable* t = new Executable("test", args, 4); 
     EXPECT_EQ(t->execute(), false); 
     
 }
 
 TEST(TestClass, dFlagDirectory){
-    char * args[] = {"test", "-d", "unit_tests", NULL}; 
+    char * args[] = {(char *)"test", (char *)"-d", (char *)"unit_tests", (char *)NULL}; 
     Executable* t = new Executable("test", args, 4); 
     EXPECT_EQ(t->execute(), true); 
     
@@ -84,7 +84,7 @@ TEST(TestClass, dFlagDirectory){
 
 TEST(ExecutableTest, ValidCommandAndArg){
     
-    char * argList[] = {"ls", "-a", NULL}; 
+    char * argList[] = {(char *)"ls", (char *)"-a", (char *)NULL}; 
 
     Executable * exec = new Executable("ls", argList, 3); 
 
@@ -93,7 +93,7 @@ TEST(ExecutableTest, ValidCommandAndArg){
 
 TEST(ExecutableTest, invalidCommandAndArg){
 
-    char * argList[] = {"dddd", "dddd", NULL};
+    char * argList[] = {(char *)"dddd", (char *)"dddd", (char *)NULL};
 
     Executable * exec = new Executable("dddd", argList, 3);
 
@@ -103,7 +103,7 @@ TEST(ExecutableTest, invalidCommandAndArg){
 
 TEST(ExecutableTest, invalidCommandValidArg){
 
-    char * argList[] = {"ls", "-a", NULL};
+    char * argList[] = {(char *)"ls", (char *)"-a", (char *)NULL};
 
     Executable * exec = new Executable("dddd", argList, 3);
 
@@ -113,7 +113,7 @@ TEST(ExecutableTest, invalidCommandValidArg){
 
 TEST(ExecutableTest, validCommandInvalidArg){
 
-    char * argList[] = {"dddd", "dddd", NULL};
+    char * argList[] = {(char *)"dddd", (char *)"dddd", (char *)NULL};
 
     Executable * exec = new Executable("ls", argList, 3);
 
@@ -122,7 +122,7 @@ TEST(ExecutableTest, validCommandInvalidArg){
 
 TEST(ExecutableTest, emptyCommandAndValidArg){
 
-    char * argList[] = {"ls", "-a", NULL};
+    char * argList[] = {(char *)"ls", (char *)"-a", (char *)NULL};
 
     Executable * exec = new Executable("", argList, 3);
 
