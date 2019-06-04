@@ -30,8 +30,8 @@ bool Execvp::execute() {
     else {
         waitpid(pid, &status, 0);
         
-        if (status == 0) {
-            return true; 
+        if (WIFEXITED(status)) {
+            return true;
         }
 
         cout << execName << ": command not found\n";
