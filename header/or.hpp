@@ -1,5 +1,5 @@
-#ifndef OR_H
-#define OR_H
+#ifndef OR_HPP
+#define OR_HPP
 #include "connector.hpp"
 
 using namespace std;
@@ -13,4 +13,4 @@ class Or : public Connector {
                                 // and right child execute both return true
 };
 
-#endif  // END OF OR_H
+#endif  // END OF OR_HPP
