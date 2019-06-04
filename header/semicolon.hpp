@@ -1,5 +1,5 @@
-#ifndef SEMICOLON_H
-#define SEMICOLON_H
+#ifndef SEMICOLON_HPP
+#define SEMICOLON_HPP
 #include "connector.hpp"
 
 using namespace std;
@@ -13,4 +13,4 @@ class Semicolon : public Connector {
                                 // and right child execute both return true
 };
 
-#endif  // END OF SEMICOLON_H
+#endif  // END OF SEMICOLON_HPP
