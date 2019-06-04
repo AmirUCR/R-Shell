@@ -6,10 +6,17 @@
 
 using namespace std;
 
+Executable::Executable(const char* execName, char** argList, int argListSize) : Command() {
+        this->execName = execName;
+        this->argList = argList;
+        this->successExec = true;
+        this->argListSize = argListSize;
+}
+
 bool Executable::execute() {
     bool successFail = false;
 
-    // if execName == test, instantiate test -- return test.execute
+    // if execName == test, instantiate test -- return test->execute
     if (strcmp(this->execName, "test") == 0) {
         Test_cmd* t = new Test_cmd(execName, argList, argListSize);
         successFail = t->execute();
@@ -27,4 +34,8 @@ bool Executable::execute() {
 
         return successFail;
     }
+}
+
+const char * Executable::getName() {
+    return this->execName;
 }
