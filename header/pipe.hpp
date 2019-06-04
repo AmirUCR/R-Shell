@@ -6,7 +6,7 @@ using namespace std;
 
 class Pipe : public Connector {
     public:
-    Pipe() : Connector() {};    // Initialize
+    Pipe();    // Initialize
     void SetLeft(Command*);
     void SetRight(Command*);
     bool execute();             // Only return true if left child
