@@ -11,13 +11,8 @@ class Executable: public Command {
     int argListSize;
 
     public:
-    Executable(const char* execName, char** argList, int argListSize) : Command() {
-        this->execName = execName;
-        this->argList = argList;
-        this->successExec = true;
-        this->argListSize = argListSize;
-    }
-
+    Executable(const char* execName, char** argList, int argListSize);
+    const char * getName();
     virtual bool execute();
 }; 
 
