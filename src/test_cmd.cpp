@@ -4,7 +4,7 @@
 #include <algorithm>
 using namespace std; 
 
-bool Test_cmd::execute() {
+bool Test_cmd::execute(int input_fd, int output_fd) {
     bool status; 
     struct stat buf;
 
@@ -65,4 +65,8 @@ bool Test_cmd::execute() {
             return false; 
         }
     }
+}
+
+const char * Test_cmd::getExecName() {
+    return this->execName;
 }

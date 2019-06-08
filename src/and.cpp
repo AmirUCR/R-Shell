@@ -1,7 +1,7 @@
 #include "../header/and.hpp"
 
 // The And only executes rhs if lhs fails.
-bool And::execute() {
+bool And::execute(int input_fd, int output_fd) {
 
     // We call both lhs and rhs commands to execute.
     // We only execute the rhs command if lhs succeeds.
@@ -22,3 +22,5 @@ void And::SetLeft(Command* c) {
 void And::SetRight(Command* c) {
     this->rhsCMD = c;
 }
+
+const char * And::getExecName() {};

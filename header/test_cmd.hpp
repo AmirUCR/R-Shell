@@ -8,10 +8,10 @@
 #include "executable.hpp"
 
 class Test_cmd : public Executable {
-    public: 
+    public:
     Test_cmd(const char* execName, char** argList, int argListSize) : Executable(execName, argList, argListSize) {}
-
-    bool execute();
+    bool execute(int input_fd, int output_fd);
+    const char * getExecName();
 };
 
 #endif

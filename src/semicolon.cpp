@@ -1,7 +1,7 @@
 #include "../header/semicolon.hpp"
 
 // The Semicolon executes both lhs and rhs
-bool Semicolon::execute() {
+bool Semicolon::execute(int input_fd, int output_fd) {
     bool lhs_flag = false;
     bool rhs_flag = false;
 
@@ -28,3 +28,4 @@ void Semicolon::SetRight(Command* c) {
     this->rhsCMD = c;
 }
 
+const char * Semicolon::getExecName() {}

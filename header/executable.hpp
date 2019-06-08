@@ -13,7 +13,8 @@ class Executable: public Command {
     public:
     Executable(const char* execName, char** argList, int argListSize);
     const char * getName();
-    virtual bool execute();
+    bool execute(int input_fd, int output_fd);
+    const char * getExecName();
 }; 
 
 #endif
