@@ -7,24 +7,43 @@
 #include <cstring>
 #include <iostream>
 
-using namespace std;
+using std::cerr;
 
-bool Execvp::execute() {
+bool Execvp::execute(int input_fd, int output_fd) {
 
     int status; 
-    pid_t pid = fork(); 
+    pid_t pid = fork();
     
     if (strcmp(this->execName, "exit") == 0) {
-        exit(0); 
+        exit(EXIT_SUCCESS); 
     }
 
     if (pid < 0) {
-        perror("Failure to fork");
+        std::cerr << "In class Execvp: Failed to fork.\n";
+        return false;
     }
  
     if (pid == 0) {
-        execvp(this->execName, this->argList);
-        exit(1); 
+        int input_dup2_status = dup2(input_fd, 0);
+
+        if (input_dup2_status < 0) {
+            std::cerr << "In class Execvp: Bad input file descriptor.\n";
+            exit(EXIT_FAILURE);
+        }
+
+        int output_dup2_status = dup2(output_fd, 1);
+
+        if (output_dup2_status < 0) {
+            std::cerr << "In class Execvp: Bad output file descriptor.\n";
+            exit(EXIT_FAILURE);
+        }
+
+        int execvp_status = execvp(this->execName, this->argList);
+
+        if (execvp_status < 0) {
+            std::cerr << "Execvp failed.\n";
+            exit(EXIT_FAILURE); 
+        }
     }
 
     else {
@@ -34,8 +53,9 @@ bool Execvp::execute() {
             return true;
         }
 
-        cout << execName << ": command not found\n";
+        std::cerr << execName << ": command not found\n";
         return false;  
     }
 }
 
+const char * Execvp::getExecName() {}
