@@ -167,8 +167,8 @@ void Parser::parse() {
 		}
 	}
 
-	int current{0};
-	int trail{0};
+	int current = 0;
+	int trail = 0;
 
 	// Begin tokenizing
 	// Here be dragons...
