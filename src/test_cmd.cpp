@@ -21,6 +21,20 @@ bool Test_cmd::execute(int input_fd, int output_fd) {
             return false;
         }
 
+        int input_dup2_status = dup2(input_fd, 0);
+
+        if (input_dup2_status < 0) {
+            std::cerr << "In class Test_cmd: Bad input file descriptor.\n";
+            exit(EXIT_FAILURE);
+        }
+
+        int output_dup2_status = dup2(output_fd, 1);
+
+        if (output_dup2_status < 0) {
+            std::cerr << "In class Test_cmd: Bad output file descriptor.\n";
+            exit(EXIT_FAILURE);
+        }
+
         if (stat(argList[2], &buf) == 0) {
             if (strcmp(this->argList[1], "-f") == 0) {
                 status = S_ISREG(buf.st_mode); 
@@ -49,6 +63,20 @@ bool Test_cmd::execute(int input_fd, int output_fd) {
     //if no flag is passed in default to -e
     else {
         if (stat(argList[1], &buf) == 0) {
+
+            int input_dup2_status = dup2(input_fd, 0);
+
+            if (input_dup2_status < 0) {
+                std::cerr << "In class Test_cmd: Bad input file descriptor.\n";
+                exit(EXIT_FAILURE);
+            }
+
+            int output_dup2_status = dup2(output_fd, 1);
+
+            if (output_dup2_status < 0) {
+                std::cerr << "In class Test_cmd: Bad output file descriptor.\n";
+                exit(EXIT_FAILURE);
+            }
             status = S_ISDIR(buf.st_mode) || S_ISREG(buf.st_mode);
             
             if (status) {

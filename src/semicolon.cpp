@@ -5,11 +5,11 @@ bool Semicolon::execute(int input_fd, int output_fd) {
     bool lhs_flag = false;
     bool rhs_flag = false;
 
-    if (this->lhsCMD != 0 && this->lhsCMD->execute()) {
+    if (this->lhsCMD && this->lhsCMD->execute(input_fd, output_fd)) {
         lhs_flag = true;
     }
 
-    if (this->rhsCMD != 0 && this->rhsCMD->execute()) {
+    if (this->rhsCMD && this->rhsCMD->execute(input_fd, output_fd)) {
         rhs_flag = true;
     }
 
