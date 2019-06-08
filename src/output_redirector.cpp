@@ -9,28 +9,24 @@
 
 OutputRedirector::OutputRedirector() : Connector() {}
 
-bool OutputRedirector::execute() {
-    bool successFail = false;
-
+// default input_fd = 0, default output_fd = 1
+bool OutputRedirector::execute(int input_fd, int output_fd) {
     if (rhsCMD && lhsCMD) {
-        int stdout_copy = dup(1);
-        close(1); // Release stdout
 
-        // TODO FIX THIS HARDCODED DOO DOO
-        const char * execName = static_cast<const char *>("text2.txt"); // get name of left side command
-        int fdout = open(execName, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+        const char * execName = rhsCMD->getExecName(); // get name of left side command
+        output_fd = open(execName, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 
-        if (fdout > -1) {
+        if (output_fd > -1) {
             int status;
             pid_t pid = fork();
 
             if (pid < 0) {
-                perror("Failure to fork");
+                std::cerr << "In class Output Redirector: Failed to fork.\n";
             }
 
             if (pid == 0) {
-                lhsCMD->execute();
-                exit(1);
+                lhsCMD->execute(input_fd, output_fd);
+                exit(EXIT_FAILURE);
             }
 
             else {
@@ -38,23 +34,21 @@ bool OutputRedirector::execute() {
 
                 // Return whether child process terminated normally
                 if (WIFEXITED(status)) {
-                    successFail = true; 
+                    return true; 
                 } else {
                     //cout << lhs->getname << " command not found"
-                    successFail = false; 
+                    return false; 
                 }
             }
         } else {
-            std::cout << "r'shell: " << execName << ": No such file or directory\n";
-            successFail = false;
+            std::cerr << "r'shell: " << execName << ": No such file or directory\n";
+            return false;
         }
 
-        close(fdout);                // Close our file
-        dup2(stdout_copy, 1);        // Put stdout back where it belongs
-        close(stdout_copy);          // Close the copy
+        close(output_fd);       // Close our file
     }
 
-    return successFail;
+    return false;
 }
 
 void OutputRedirector::SetLeft(Command* c) {
@@ -63,3 +57,5 @@ void OutputRedirector::SetLeft(Command* c) {
 void OutputRedirector::SetRight(Command* c) {
     this->rhsCMD = c;
 }
+
+const char * OutputRedirector::getExecName() {}
