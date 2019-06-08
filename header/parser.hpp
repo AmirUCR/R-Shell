@@ -12,7 +12,9 @@
 #include "and.hpp"
 #include "semicolon.hpp"
 
-using namespace std;
+using std::string;
+using std::vector;
+using std::queue;
 
 class Parser {
 	private:

@@ -49,3 +49,6 @@ Makefile
 # CMake Temp Files
 CMakeCache.txt
 CMakeFiles
+
+# Test files
+text.txt

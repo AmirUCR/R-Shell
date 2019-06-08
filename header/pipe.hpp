@@ -1,10 +1,10 @@
-#ifndef OR_HPP
-#define OR_HPP
+#ifndef PIPE_HPP
+#define PIPE_HPP
 #include "connector.hpp"
 
-class Or : public Connector {
+class Pipe : public Connector {
     public:
-    Or() : Connector() {};    // Initialize
+    Pipe();    // Initialize
     void SetLeft(Command*);
     void SetRight(Command*);
     bool execute(int input_fd, int output_fd);             // Only return true if left child
@@ -12,4 +12,4 @@ class Or : public Connector {
     const char * getExecName();
 };
 
-#endif  // END OF OR_HPP
+#endif  // END OF PIPE_HPP

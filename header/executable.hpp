@@ -11,14 +11,10 @@ class Executable: public Command {
     int argListSize;
 
     public:
-    Executable(const char* execName, char** argList, int argListSize) : Command() {
-        this->execName = execName;
-        this->argList = argList;
-        this->successExec = true;
-        this->argListSize = argListSize;
-    }
-
-    virtual bool execute();
+    Executable(const char* execName, char** argList, int argListSize);
+    const char * getName();
+    bool execute(int input_fd, int output_fd);
+    const char * getExecName();
 }; 
 
 #endif

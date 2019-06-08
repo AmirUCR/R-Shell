@@ -1,7 +1,7 @@
 #include "../header/or.hpp"
 
 // The Or only executes rhs if lhs fails.
-bool Or::execute() {
+bool Or::execute(int input_fd, int output_fd) {
 
     // If lhs fails, execute rhs. If rhs succeeds, return true.
     if (this->lhsCMD != 0 && !this->lhsCMD->execute()) {
@@ -21,3 +21,5 @@ void Or::SetLeft(Command* c) {
 void Or::SetRight(Command* c) {
     this->rhsCMD = c;
 }
+
+const char * Or::getExecName() {}

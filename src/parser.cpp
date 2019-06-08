@@ -3,6 +3,10 @@
 #include "or.cpp"
 #include "semicolon.cpp"
 #include "executable.cpp"
+#include "input_redirector.cpp"
+#include "output_redirector.cpp"
+#include "output_redirector_append.cpp"
+#include "pipe.cpp"
 #include <cstring>
 #include <algorithm>
 #include <queue>
@@ -295,7 +299,7 @@ void Parser::parse() {
 }
 
 bool Parser::isOperator(string &s) {
-	return (s == "&&" || s == ";" || s == "||") ? true : false;
+	return (s == "&&" || s == ";" || s == "||" || s == "<" || s == ">" || s == ">>" || s == "|") ? true : false;
 }
 
 Connector* Parser::WhichConnector(string s) {
@@ -309,6 +313,22 @@ Connector* Parser::WhichConnector(string s) {
 
 	if (s == ";") {
 		return new Semicolon();
+	}
+
+	if (s == "<") {
+		return new InputRedirector();
+	}
+
+	if (s == ">") {
+		return new OutputRedirector();
+	}
+
+	if (s == ">>") {
+		return new OutputRedirectorAppend();
+	}
+
+	if (s == "|") {
+		return new Pipe();
 	}
 
 	return 0;
