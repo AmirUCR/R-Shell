@@ -42,6 +42,14 @@ Bonjour!
 
 Moreover, with RShell, you can type in `echo "hello` and the program prompts you to continue your input until you input a second quotation mark (I'm ~~quote~~ quite proud of this one. -Amir).
 
+R'Shell support I/O redirection. You can input commands such as `test -f text.txt && cat < text.txt | sort | tr a-z A-Z` and if `text.txt` exists, the contents of the file is output to the terminal after being sorted and translated into uppercase. The supported operators are:
+```
+<
+>
+>>
+```
+where `>>` appends to a text file if it exists, or creates it if it's not present.
+
 The design pattern we use for this program is the **Composite Pattern**. This is because a base class exists from which two other classes inherit from. Furthermore, each Connector object can contain other Connectors, or other Exectuables. The Connector abstract class is our composite, while the Executable is the base class that serves as the interface for the execvp and test_cmd subclasses. 
 
 # How it Works
@@ -55,6 +63,9 @@ The user input is taken by the Parser and each word is tokenized and stored in a
   * The ; connector's execute only returns the status of its RHS
   * The && connector's execute returns whether if both LHS and RHS are true
   * The || connector's execute returns true if either of LHS or RHS are true
+  * The < connector is an input redirector.
+  * The > connector is an output redirector.
+  * The >> connector is an appending output redirector.
 
 
 **Abstract Base Connector**
@@ -74,7 +85,7 @@ The user input is taken by the Parser and each word is tokenized and stored in a
 * Takes in two Command pointer type objects (can be an Executable or another Command) and calls execute. 
 
 * Overrides execute
-  * The execute function takes lhs and rhs Command pointer types and instantiates new Command objects and returns the status of the rhsEval.
+  * The execute function takes lhs and rhs Command pointer types and instantiates new Command objects. It then returns the status of the rhsEval.
 
 
 **Class Pipe**
@@ -82,6 +93,18 @@ The user input is taken by the Parser and each word is tokenized and stored in a
 
 * Overrides execute
   * The execute function takes lhs and rhs Command pointer types and instantiates new Command objects, returning true if either rhsEval or lhsEval is true. 
+
+**Class Input Redirector**
+* Takes in two Command pointer type objects (can be an Executable or another Command) and calls execute. 
+
+* Overrides execute
+  * The execute function takes lhs and rhs Command pointer types and instantiates new Command objects. It then returns the status of the lhsEval.
+  
+**Class Output Redirector and Output Redirector Append**
+* Takes in two Command pointer type objects (can be an Executable or another Command) and calls execute. 
+
+* Overrides execute
+  * The execute function takes lhs and rhs Command pointer types and instantiates new Command objects. It then returns the status of the lhsEval.
 
 **Class Executable**
 * Takes in an executable name as well as an array of character type arguments.
@@ -264,6 +287,10 @@ waitpid(-1, &status, 0);
      1. Expect the rhs to run even if lhs fails
 1. Test execute by passing in two invalid Command type objects and expect False
 
+### [Input Redirector]
+1. Test whether `<` returns true if a valid file is passed in.
+1. Test whether `<` returns false if an invalid file is passed in.
+
 ### Test_cmd
 1. Test all the flags when a file is passed in.
 1. Test all the flags when a directory is passed in.
@@ -275,3 +302,4 @@ waitpid(-1, &status, 0);
 1. If everything that you passed in is known to be valid, expect the output to be valid
 1. Using the Parser, enter invalid executable names. Expect the output to be invalid
 1. Enter a mix of valid and invalid executable names or connectors, and expect the output to behave accordingly
+1. Test I/O redirectors in conjunction with other connectors
