@@ -10,7 +10,7 @@ This program intends to perform the following functions:
 
 1. Print a command prompt (e.g. `$`)
 2. Read in a line of command(s) (and connector(s)) from standard input
-3. Execute the appropriate commands using _fork_, _execvp_, and _waitpid_
+3. Execute the appropriate commands using _fork_, _execvp_, and _waitpid_, _dup2_, _pipe_, and file descriptors
 
 When using this program, your command **must** have the following format:
 
