@@ -7,8 +7,6 @@
 #include <cstring>
 #include <iostream>
 
-using std::cerr;
-
 bool Execvp::execute(int input_fd, int output_fd) {
 
     int status; 
@@ -41,7 +39,6 @@ bool Execvp::execute(int input_fd, int output_fd) {
         int execvp_status = execvp(this->execName, this->argList);
 
         if (execvp_status < 0) {
-            std::cerr << "Execvp failed.\n";
             exit(EXIT_FAILURE); 
         }
     }
@@ -50,6 +47,10 @@ bool Execvp::execute(int input_fd, int output_fd) {
         waitpid(pid, &status, 0);
         
         if (WIFEXITED(status)) {
+            if (WEXITSTATUS(status) == 1) {
+                return false;
+            }
+            
             return true;
         }
 

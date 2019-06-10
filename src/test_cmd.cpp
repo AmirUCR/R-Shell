@@ -25,14 +25,14 @@ bool Test_cmd::execute(int input_fd, int output_fd) {
 
         if (input_dup2_status < 0) {
             std::cerr << "In class Test_cmd: Bad input file descriptor.\n";
-            exit(EXIT_FAILURE);
+            return false;
         }
 
         int output_dup2_status = dup2(output_fd, 1);
 
         if (output_dup2_status < 0) {
             std::cerr << "In class Test_cmd: Bad output file descriptor.\n";
-            exit(EXIT_FAILURE);
+            return false;
         }
 
         if (stat(argList[2], &buf) == 0) {
@@ -68,14 +68,14 @@ bool Test_cmd::execute(int input_fd, int output_fd) {
 
             if (input_dup2_status < 0) {
                 std::cerr << "In class Test_cmd: Bad input file descriptor.\n";
-                exit(EXIT_FAILURE);
+                return false;
             }
 
             int output_dup2_status = dup2(output_fd, 1);
 
             if (output_dup2_status < 0) {
                 std::cerr << "In class Test_cmd: Bad output file descriptor.\n";
-                exit(EXIT_FAILURE);
+                return false;
             }
             status = S_ISDIR(buf.st_mode) || S_ISREG(buf.st_mode);
             
