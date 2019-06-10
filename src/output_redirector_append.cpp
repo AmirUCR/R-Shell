@@ -11,7 +11,6 @@ OutputRedirectorAppend::OutputRedirectorAppend() : Connector() {}
 
 bool OutputRedirectorAppend::execute(int input_fd, int output_fd) {
     if (rhsCMD && lhsCMD) {
-
         const char * execName = rhsCMD->getExecName(); // get name of left side command
         output_fd = open(execName, O_WRONLY | O_CREAT | O_APPEND, 0644);
 

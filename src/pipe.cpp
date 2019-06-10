@@ -33,7 +33,7 @@ bool Pipe::execute(int input_fd, int output_fd) {
         return false;
     }
 
-    std::cerr << "In class Pipe: One of left hand side or right hand side is missing.\n";
+    std::cerr << "In class Pipe: One or both of left hand side or right hand side is missing.\n";
     return false;
 }
 

@@ -12,7 +12,6 @@ OutputRedirector::OutputRedirector() : Connector() {}
 // default input_fd = 0, default output_fd = 1
 bool OutputRedirector::execute(int input_fd, int output_fd) {
     if (rhsCMD && lhsCMD) {
-
         const char * execName = rhsCMD->getExecName(); // get name of left side command
         output_fd = open(execName, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 
@@ -36,7 +35,6 @@ bool OutputRedirector::execute(int input_fd, int output_fd) {
                 if (WIFEXITED(status)) {
                     return true; 
                 } else {
-                    //cout << lhs->getname << " command not found"
                     return false; 
                 }
             }

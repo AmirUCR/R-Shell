@@ -7,8 +7,6 @@
 #include <cstring>
 #include <iostream>
 
-using std::cerr;
-
 bool Execvp::execute(int input_fd, int output_fd) {
 
     int status; 

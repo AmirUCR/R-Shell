@@ -11,7 +11,6 @@ InputRedirector::InputRedirector() : Connector() {}
 
 bool InputRedirector::execute(int input_fd, int output_fd) {
     if (rhsCMD && lhsCMD) {
-
         const char * execName = rhsCMD->getExecName(); // get name of right side command
         input_fd = open(execName, O_RDONLY, 0644);
 
