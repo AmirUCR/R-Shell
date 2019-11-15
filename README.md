@@ -1,9 +1,6 @@
-# CS100 RShell
-Spring 2019
+# RShell
 
-Amirsadra Mohseni, SID 862085035
-
-Jihad Shalabi, SID 861294360
+Authors: Amir Mohseni, Jihad Shalabi
 
 # Introduction
 This program intends to perform the following functions:
@@ -226,36 +223,36 @@ waitpid(-1, &status, 0);
 # Development and Testing Roadmap
 
 ## Classes and Functions
-1. [Abstract Class Command](https://github.com/cs100/spring-2019-assignment-cs100-dance-team/issues/1)
-1. [Parser Class](https://github.com/cs100/spring-2019-assignment-cs100-dance-team/issues/2)
+1. Abstract Class Command
+1. Parser Class
     1. Create the function Parse
-1. [Executable Class](https://github.com/cs100/spring-2019-assignment-cs100-dance-team/issues/3)
+1. Executable Class
     1. Create the execute function. This function should handle the special command _exit_ as well as any other command using execvp, syscall forks, and waitpid. It will return true if the execution succeeds and false otherwise. 
-1. [Abstract Connector Class](https://github.com/cs100/spring-2019-assignment-cs100-dance-team/issues/4)
+1. Abstract Connector Class
     1. Create the base class for all other connectors to inherit from
-1. [And Class](https://github.com/cs100/spring-2019-assignment-cs100-dance-team/issues/5)
+1. And Class
     1. Create the execute function. This function executes the lhs and rhs Command type objects. It returns true if both lhs and rhs succeed. 
-1. [Semicolon Class](https://github.com/cs100/spring-2019-assignment-cs100-dance-team/issues/6)
+1. Semicolon Class
     1. Create the execute function. This function executes the lhs and rhs Command type objects. It returns true if rhs succeeds. 
-1. [Pipe Class](https://github.com/cs100/spring-2019-assignment-cs100-dance-team/issues/7)
+1. Pipe Class
     1. Create the execute function. This function executes the lhs and rhs Command type objects. It returns true if either lhs or rhs succeed. 
 
 ## Unit/Integration Testing
 ### Parser
-1. Test that [GetInput](https://github.com/cs100/spring-2019-assignment-cs100-dance-team/issues/8) works correctly
+1. Test that GetInput works correctly
     1. By calling GetInput and passing in a single executable such as ls
     1. Pass in an executable with an argument
     1. Pass in an executable, an argument, and a connector
     1. Pass in an empty string
     1. Pass in numeric digits
 
-1. Test that [Parse](https://github.com/cs100/spring-2019-assignment-cs100-dance-team/issues/9) works correctly
+1. Test that Parse works correctly
     1. Create a temporary function that iterates through the commands vector and outputs its contents
     1. Pass in a combination of executables, arguments, and connectors
     1. (After all other classes are built) Test that the parser creates the appropriate Command type objects, and correctly passes the argument list to Executable
 
 ### Executable
-1. Test that [execute](https://github.com/cs100/spring-2019-assignment-cs100-dance-team/issues/11) works correctly
+1. Test that execute works correctly
     1. Pass in a valid shell executable command (such as echo) and valid arguments. 
     1. Pass in a valid shell executable commmand and an invalid argument. 
     1. Pass in an invalid shell executable command and a valid argument. 
@@ -263,7 +260,7 @@ waitpid(-1, &status, 0);
     1. Pass in an empty shell executable commmand. 
     1. Pass in a valid executable command and an empty argument. 
 
-### [And](https://github.com/cs100/spring-2019-assignment-cs100-dance-team/issues/12)
+### And
 1. Test the constructor by using a temporary getter function
 1. Test execute by passing in two Command type objects, and then observe the output(s)
 1. Test execute by passing in two valid Command type objects and expect True
@@ -271,7 +268,7 @@ waitpid(-1, &status, 0);
     1. Expect the rhs executable not to run when the lhs first fails
 1. Test execute by passing in two invalid Command type objects and expect False
 
-### [Semicolon](https://github.com/cs100/spring-2019-assignment-cs100-dance-team/issues/13)
+### Semicolon
 1. Test the constructor by using a temporary getter function
 1. Test execute by passing in two Command type objects, and then observe the output(s)
 1. Test execute by passing in two valid Command type objects and expect True
@@ -279,7 +276,7 @@ waitpid(-1, &status, 0);
      1. Expect the rhs to run even if lhs fails
 1. Test execute by passing in two invalid Command type objects and expect False
 
-### [Pipe](https://github.com/cs100/spring-2019-assignment-cs100-dance-team/issues/14)
+### Pipe
 1. Test the constructor by using a temporary getter function
 1. Test execute by passing in two Command type objects, and then observe the output(s)
 1. Test execute by passing in two valid Command type objects and expect True
@@ -287,7 +284,7 @@ waitpid(-1, &status, 0);
      1. Expect the rhs to run even if lhs fails
 1. Test execute by passing in two invalid Command type objects and expect False
 
-### [Input Redirector]
+### Input Redirector
 1. Test whether `<` returns true if a valid file is passed in.
 1. Test whether `<` returns false if an invalid file is passed in.
 
@@ -297,7 +294,7 @@ waitpid(-1, &status, 0);
 1. Test when no flag is passed in with directory and file. 
 1. Test when no file or directory are passed in.  
 
-### [Integration Test](https://github.com/cs100/spring-2019-assignment-cs100-dance-team/issues/15)
+### Integration Test
 1. Using the Parser, enter executable names, arguments, and connectors
 1. If everything that you passed in is known to be valid, expect the output to be valid
 1. Using the Parser, enter invalid executable names. Expect the output to be invalid
